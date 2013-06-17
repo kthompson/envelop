@@ -98,11 +98,5 @@ namespace Envelop.Tests
             Assert.That(items[0] is SomeInterfaceImplementation);
             Assert.That(items[1] is SomeInterfaceImplementation2);
         }
-
-        [Test]
-        public void Test()
-        {
-            
-        }
     }
 }

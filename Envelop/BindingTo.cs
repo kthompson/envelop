@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,16 +33,19 @@ namespace Envelop
 
                     var args = requests.Select(request =>
                     {
-                        if (request.MultiInjection == MultiInjection.Enumerable)
-                            return _builder.ResolveAll(request);
 
-                        if (request.MultiInjection == MultiInjection.Array)
-                            return _builder.ResolveAll(request).ToArray();
+                        if(request.MultiInjection == MultiInjection.None)
+                            return _builder.Resolve(request);
+
+                        var enumerable = _builder.ResolveAll(request).ToArray();
 
                         if (request.MultiInjection == MultiInjection.List)
-                            return _builder.ResolveAll(request).ToList();
+                            return CreateList(enumerable, request.ServiceType);
 
-                        return _builder.Resolve(request);
+                        if (request.MultiInjection == MultiInjection.Enumerable || request.MultiInjection == MultiInjection.Array)
+                            return CreateArray(enumerable, request.ServiceType);
+
+                        throw new ActivationFailedException();
                     });
 
                     return item.Constructor.Invoke(args.ToArray());
@@ -53,15 +57,46 @@ namespace Envelop
             return Constraints();
         }
 
+        private static object CreateArray(object[] enumerable, Type serviceType)
+        {
+            var array = Array.CreateInstance(serviceType, enumerable.Length);
+            enumerable.CopyTo(array, 0);
+            return array;
+        }
+
+        private static object CreateList(object[] enumerable, Type serviceType)
+        {
+            var listType = typeof(List<>).MakeGenericType(serviceType);
+            var list = (IList)Activator.CreateInstance(listType);
+            foreach (var item in enumerable)
+                list.Add(item);
+
+            return list;
+        }
+
         private Request CreateRequest(IRequest req, Type targetType, Type serviceType)
         {
             //TODO: detect array multi-injection on the request
             var mi = MultiInjection.None;
 
-            if (serviceType.IsGenericType && serviceType.GetGenericTypeDefinition() == typeof (IEnumerable<>))
+            if (serviceType.IsGenericType)
             {
-                mi = MultiInjection.Enumerable;
-                serviceType = serviceType.GetGenericArguments()[0];
+                if (serviceType.GetGenericTypeDefinition() == typeof (IEnumerable<>))
+                {
+                    mi = MultiInjection.Enumerable;
+                    serviceType = serviceType.GetGenericArguments()[0];
+                }
+                else if (serviceType.GetGenericTypeDefinition() == typeof(List<>))
+                {
+                    mi = MultiInjection.List;
+                    serviceType = serviceType.GetGenericArguments()[0];
+                }
+
+            }
+            else if (serviceType.IsArray)
+            {
+                mi = MultiInjection.Array;
+                serviceType = serviceType.GetElementType();
             }
 
             return new Request

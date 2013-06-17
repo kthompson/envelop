@@ -60,5 +60,13 @@ namespace Envelop.Tests.TestDependencies
         }
     }
 
+    class MultiInterfaceImplementation3 : IMultiInterface
+    {
+        public ISomeInterface[] SomeInterfaces { get; private set; }
 
+        public MultiInterfaceImplementation3(List<ISomeInterface> someInterfaces)
+        {
+            this.SomeInterfaces = someInterfaces.ToArray();
+        }
+    }
 }

@@ -15,4 +15,13 @@ namespace Envelop
     public class BindingNotFoundException : InvalidOperationException
     {
     }
+
+    
+    /// <summary>
+    /// This exception can occur when activation fails.
+    /// </summary>
+    public class ActivationFailedException : InvalidOperationException
+    {
+        
+    }
 }
