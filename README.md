@@ -8,7 +8,7 @@
 1. Wrap up, cover, or surround completely.
 2. Make obscure; conceal.
 
-## About Envelop
+## What is Envelop
 
 Envelop is a simple to use Dependency Injection and Inversion of Control container.
 
@@ -22,6 +22,10 @@ interface ISomeInterface
 }
 
 class SomeInterfaceImplementation : ISomeInterface
+{
+}
+
+class SomeInterfaceImplementation2 : ISomeInterface
 {
 }
 
@@ -39,6 +43,22 @@ class AnotherInterfaceImplementation : IAnotherInterface
 	    this.SomeInterface = someInterface;
 	}
 }
+
+interface IMultiInterface
+{
+	ISomeInterface[] SomeInterfaces { get; }
+}
+
+class MultiInterfaceImplementation : IMultiInterface
+{
+	public ISomeInterface[] SomeInterfaces { get; private set; }
+
+	public MultiInterfaceImplementation(ISomeInterface[] someInterfaces)
+	{
+    		this.SomeInterfaces = someInterfaces;
+	}
+}
+
 ```
 ### Fluent
 
@@ -76,7 +96,7 @@ var anotherInterfaceInstance = kernel.Resolve<IAnotherInterface>();
 var kernel = new Kernel();
 kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>();
 kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation2>();
-kernel.Bind<IMultiInterface>().To<MultiInterfaceImplementation3>();
+kernel.Bind<IMultiInterface>().To<MultiInterfaceImplementation>();
 
 var t1 = kernel.Resolve<IMultiInterface>();
 var someInterfaces = kernel.ResolveAll<ISomeInterface>();
