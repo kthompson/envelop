@@ -21,7 +21,7 @@ namespace Envelop
         {
             var targetType = typeof (TImplementation);
 
-            var cache = targetType.GetConstructors().Select(ctor => new {Constructor = ctor, Parameters = ctor.GetParameters()});
+            var cache = targetType.GetConstructors().Select(ctor => new {Constructor = ctor, Parameters = ctor.GetParameters()}).ToArray();
 
             _binding.Activator = req =>
             {
@@ -33,7 +33,6 @@ namespace Envelop
 
                     var args = requests.Select(request =>
                     {
-
                         if(request.MultiInjection == MultiInjection.None)
                             return _builder.Resolve(request);
 
