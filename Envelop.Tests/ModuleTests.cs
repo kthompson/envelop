@@ -9,28 +9,23 @@ using NUnit.Framework;
 namespace Envelop.Tests
 {
     [TestFixture]
-    public class InjectionTests
+    public class ModuleTests
     {
-        [Test]
-        public void InjectionTest()
+        class SimpleModuleTestModule : Module
         {
-            var kernel = Kernel.Create();
-            kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>();
-            kernel.Bind<IAnotherInterface>().To<AnotherInterfaceImplementation>();
-
-            var t1 = kernel.Resolve<IAnotherInterface>();
-
-            Assert.NotNull(t1);
-            Assert.NotNull(t1.SomeInterface);
+            protected override void Load()
+            {
+                this.Bind<ISomeInterface>().To<SomeInterfaceImplementation>();
+                this.Bind<ISomeInterface>().To<SomeInterfaceImplementation2>();
+                this.Bind<IMultiInterface>().To<MultiInterfaceImplementation>();
+            }
         }
 
         [Test]
-        public void MultiInjectionArrayTest()
+        public void SimpleModuleTest()
         {
             var kernel = Kernel.Create();
-            kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>();
-            kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation2>();
-            kernel.Bind<IMultiInterface>().To<MultiInterfaceImplementation>();
+            kernel.Load(new SimpleModuleTestModule());
 
             var t1 = kernel.Resolve<IMultiInterface>();
 
@@ -42,12 +37,10 @@ namespace Envelop.Tests
         }
 
         [Test]
-        public void MultiInjectionIEnumerableTest()
+        public void SimpleAssemblyModuleTest()
         {
             var kernel = Kernel.Create();
-            kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>();
-            kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation2>();
-            kernel.Bind<IMultiInterface>().To<MultiInterfaceImplementation2>();
+            kernel.Load(typeof(SimpleModuleTestModule).Assembly);
 
             var t1 = kernel.Resolve<IMultiInterface>();
 
@@ -59,12 +52,10 @@ namespace Envelop.Tests
         }
 
         [Test]
-        public void MultiInjectionListTest()
+        public void SimpleAssemblyFileModuleTest()
         {
             var kernel = Kernel.Create();
-            kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>();
-            kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation2>();
-            kernel.Bind<IMultiInterface>().To<MultiInterfaceImplementation3>();
+            kernel.Load(typeof(SimpleModuleTestModule).Assembly.Location);
 
             var t1 = kernel.Resolve<IMultiInterface>();
 

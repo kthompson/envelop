@@ -14,11 +14,11 @@ namespace Envelop.Tests
         [Test]
         public void InjectionSpeed()
         {
-            var kernel = new Kernel();
+            var kernel = Kernel.Create();
             kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>();
             kernel.Bind<IAnotherInterface>().To<AnotherInterfaceImplementation>();
 
-            for (int i = 0; i < 1000000; i++)
+            for (int i = 0; i < 100000; i++)
             {
                 var t1 = kernel.Resolve<IAnotherInterface>();
                 Assert.NotNull(t1);

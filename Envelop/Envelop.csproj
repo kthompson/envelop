@@ -47,10 +47,10 @@
     <Compile Include="Binding.cs" />
     <Compile Include="BindingConstraint.cs" />
     <Compile Include="BindingContraints.cs" />
+    <Compile Include="IModule.cs" />
     <Compile Include="IncompleteBindingException.cs" />
     <Compile Include="DefaultBindingResolver.cs" />
     <Compile Include="BindingTo.cs" />
-    <Compile Include="Builder.cs" />
     <Compile Include="Kernel.cs" />
     <Compile Include="IBinding.cs" />
     <Compile Include="IBindingContraints.cs" />
@@ -60,6 +60,7 @@
     <Compile Include="IBindingConstraint.cs" />
     <Compile Include="IKernel.cs" />
     <Compile Include="IRequest.cs" />
+    <Compile Include="IResolver.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

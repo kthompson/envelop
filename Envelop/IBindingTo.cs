@@ -20,7 +20,7 @@ namespace Envelop
         /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
         /// <param name="func">The func.</param>
         /// <returns></returns>
-        IBindingContraints<T> To<TImplementation>(Func<IBuilder, TImplementation> func) where TImplementation : T;
+        IBindingContraints<T> To<TImplementation>(Func<IResolver, TImplementation> func) where TImplementation : T;
 
         /// <summary>
         /// Maps a binding to the singleton.

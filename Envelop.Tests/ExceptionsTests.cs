@@ -14,7 +14,7 @@ namespace Envelop.Tests
         [Test, ExpectedException(typeof(IncompleteBindingException))]
         public void IncompleteBindingException()
         {
-            var kernel = new Kernel();
+            var kernel = Kernel.Create();
             kernel.Bind<ISomeInterface>();
 
             kernel.Resolve<ISomeInterface>();
@@ -23,7 +23,7 @@ namespace Envelop.Tests
         [Test, ExpectedException(typeof(BindingNotFoundException))]
         public void BindingNotFoundException()
         {
-            var kernel = new Kernel();
+            var kernel = Kernel.Create();
             kernel.Resolve<ISomeInterface>();
         }
     }

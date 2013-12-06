@@ -7,12 +7,10 @@ namespace Envelop
 {
     class BindingTo<T> : IBindingTo<T>
     {
-        private readonly IBuilder _builder;
         private readonly IBinding<T> _binding;
 
-        internal BindingTo(IBuilder builder, IBinding<T> binding)
+        public BindingTo(IBinding<T> binding)
         {
-            _builder = builder;
             _binding = binding;
         }
 
@@ -25,18 +23,23 @@ namespace Envelop
 
             _binding.Activator = req =>
             {
+                var resolver = req.Resolver;
+
+                //Look through constructors to find a ctor we can activate
                 foreach (var item in cache)
                 {
+                    // Create a request to see if we can resolve all parameters of this ctor
                     var requests = item.Parameters.Select(p => CreateRequest(req, targetType, p.ParameterType)).ToArray();
-                    if (!requests.All(r => _builder.CanResolve(r))) 
+                    if (!requests.All(resolver.CanResolve)) 
                         continue;
 
+                    //Now lets resolve each parameter for this ctor
                     var args = requests.Select(request =>
                     {
                         if(request.MultiInjection == MultiInjection.None)
-                            return _builder.Resolve(request);
+                            return resolver.Resolve(request);
 
-                        var enumerable = _builder.ResolveAll(request).ToArray();
+                        var enumerable = resolver.ResolveAll(request).ToArray();
 
                         if (request.MultiInjection == MultiInjection.List)
                             return CreateList(enumerable, request.ServiceType);
@@ -50,6 +53,7 @@ namespace Envelop
                     return item.Constructor.Invoke(args.ToArray());
                 }
 
+                // we couldnt find a ctor that we could activate
                 throw new BindingNotFoundException();
             };
 
@@ -102,16 +106,16 @@ namespace Envelop
             {
                 ParentRequest = req, 
                 ServiceType = serviceType, 
-                Resolver = _builder, 
+                Resolver = req.Resolver, 
                 Target = targetType, 
                 MultiInjection = mi
             };
         }
 
-        public IBindingContraints<T> To<TImplementation>(Func<IBuilder, TImplementation> func) 
+        public IBindingContraints<T> To<TImplementation>(Func<IResolver, TImplementation> func) 
             where TImplementation : T
         {
-            _binding.Activator = req => func(_builder);
+            _binding.Activator = req => func(req.Resolver);
 
             return Constraints();
         }

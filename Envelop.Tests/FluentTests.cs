@@ -14,7 +14,7 @@ namespace Envelop.Tests
         [Test]
         public void BindInterfaceToClass()
         {
-            var kernel = new Kernel();
+            var kernel = Kernel.Create();
             kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>();
 
             var t1 = kernel.Resolve<ISomeInterface>();
@@ -32,7 +32,7 @@ namespace Envelop.Tests
         [Test]
         public void BindInterfaceToBuilder()
         {
-            var kernel = new Kernel();
+            var kernel = Kernel.Create();
             kernel.Bind<ISomeInterface>().To(req => new SomeInterfaceImplementation());
 
             var t1 = kernel.Resolve<ISomeInterface>();
@@ -50,7 +50,7 @@ namespace Envelop.Tests
         [Test]
         public void BindInterfaceToInstance()
         {
-            var kernel = new Kernel();
+            var kernel = Kernel.Create();
             kernel.Bind<ISomeInterface>().To(new SomeInterfaceImplementation());
 
             var t1 = kernel.Resolve<ISomeInterface>();
@@ -68,7 +68,7 @@ namespace Envelop.Tests
         [Test]
         public void ResolveAllWithGenericTypeParameter()
         {
-            var kernel = new Kernel();
+            var kernel = Kernel.Create();
             kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>();
             kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation2>();
 
@@ -85,7 +85,7 @@ namespace Envelop.Tests
         [Test]
         public void ResolveAllWithTypeParameter()
         {
-            var kernel = new Kernel();
+            var kernel = Kernel.Create();
             kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>();
             kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation2>();
 
