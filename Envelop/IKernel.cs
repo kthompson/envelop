@@ -1,11 +1,12 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace Envelop
 {
     /// <summary>
     /// <c>IKernel</c> interface for exposing basic binding and type resolution functions
     /// </summary>
-    public interface IKernel : IBuilder, IResolver
+    public interface IKernel : IBuilder, IResolver, IDisposable
     {
         /// <summary>
         /// Loads the modules at the specified file paths.
@@ -22,6 +23,12 @@ namespace Envelop
         /// </summary>
         /// <param name="modules">The modules.</param>
         void Load(params IModule[] modules);
+
+		/// <summary>
+		/// Creates a child scope.
+		/// </summary>
+		/// <returns>The scope.</returns>
+		IScope CreateScope ();
 
         /// <summary>
         /// Automatically registers all interfaces.

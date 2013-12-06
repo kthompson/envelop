@@ -46,6 +46,12 @@ namespace Envelop
         /// The multi injection.
         /// </value>
         MultiInjection MultiInjection { get; }
+
+		/// <summary>
+		/// Gets the current scope of the request.
+		/// </summary>
+		/// <value>The current scope.</value>
+		IScope CurrentScope { get; }
     }
 
     /// <summary>
@@ -71,12 +77,13 @@ namespace Envelop
         List
     }
 
-    class Request : IRequest
+	class Request : IRequest
     {
         public IResolver Resolver { get; set; }
         public Type ServiceType { get; set; }
         public Type Target { get; set; }
         public IRequest ParentRequest { get; set; }
         public MultiInjection MultiInjection { get; set; }
+		public IScope CurrentScope { get; set; }
     }
 }

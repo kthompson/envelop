@@ -90,15 +90,6 @@ namespace Envelop
         }
 
         /// <summary>
-        /// Gets the bindings.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<IBinding> GetBindings()
-        {
-            return this.Kernel.GetBindings();
-        }
-
-        /// <summary>
         /// Adds a binding.
         /// </summary>
         /// <param name="binding">The binding.</param>

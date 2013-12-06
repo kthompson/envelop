@@ -69,4 +69,26 @@ namespace Envelop.Tests.TestDependencies
             this.SomeInterfaces = someInterfaces.ToArray();
         }
     }
+
+    interface IIsDisposable : IDisposable 
+    {
+        bool IsDisposed { get; }
+    }
+
+    class IsDisposable : IIsDisposable 
+    {
+        #region IDisposable implementation
+        public void Dispose ()
+        {
+            this.IsDisposed = true;
+        }
+        #endregion
+
+        #region IIsDisposable implementation
+        public bool IsDisposed {
+            get ;
+            private set;
+        }
+        #endregion
+    }
 }

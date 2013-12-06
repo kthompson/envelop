@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Envelop
@@ -10,9 +10,9 @@ namespace Envelop
     {
         /// <summary>
         /// Resolves a given type based on the generic type parameter.
-        /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
+		/// </summary>
         T Resolve<T>();
 
         /// <summary>
@@ -68,4 +68,5 @@ namespace Envelop
         /// </returns>
         bool CanResolve(IRequest request);
     }
+	
 }

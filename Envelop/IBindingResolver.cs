@@ -10,9 +10,8 @@ namespace Envelop
         /// <summary>
         /// Resolves a binding based on the specified bindings and the request.
         /// </summary>
-        /// <param name="bindings">The bindings.</param>
         /// <param name="request">The request.</param>
         /// <returns></returns>
-        IEnumerable<IBinding> Resolve(IEnumerable<IBinding> bindings, IRequest request);
+        IEnumerable<IBinding> Resolve(IRequest request);
     }
 }

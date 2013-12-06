@@ -18,5 +18,12 @@ namespace Envelop
         /// </summary>
         /// <returns></returns>
         IBindingContraints AsSingleton();
+
+        /// <summary>
+        /// Performs the specified action after deactivation.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        /// <returns></returns>
+        IBindingContraints AfterDeactivation(Action<object> action);
     }
 }

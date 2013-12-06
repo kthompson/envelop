@@ -125,7 +125,8 @@ namespace Envelop
                 ServiceType = serviceType, 
                 Resolver = req.Resolver, 
                 Target = targetType, 
-                MultiInjection = mi
+                MultiInjection = mi,
+                CurrentScope = req.CurrentScope
             };
         }
 

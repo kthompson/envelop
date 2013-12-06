@@ -14,10 +14,10 @@ namespace Envelop
     /// </example>
     public sealed class Kernel : IKernel
     {
+        
         #region Fields
-
-        private readonly IBindingResolver _bindingResolver;
-        private readonly List<IBinding> _bindings;
+        private readonly DefaultBindingResolver _bindingResolver;
+        private readonly IScope _scope;
 
         #endregion
 
@@ -28,8 +28,8 @@ namespace Envelop
         /// </summary>
         private Kernel()
         {
-            _bindings = new List<IBinding>();
             _bindingResolver = new DefaultBindingResolver();
+            _scope = new Scope(_bindingResolver);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace Envelop
                 assemblies = new Type[] { };
             }
             catch (ReflectionTypeLoadException e)
-            {
+        {
                 assemblies = e.Types.Where(t => t != null).ToArray();
             }
 
@@ -178,8 +178,7 @@ namespace Envelop
         /// <returns></returns>
         public T Resolve<T>()
         {
-            IRequest req = CreateRequest(typeof(T));
-            return (T)Resolve(req);
+            return _scope.Resolve<T> ();
         }
 
         /// <summary>
@@ -189,8 +188,7 @@ namespace Envelop
         /// <returns></returns>
         public object Resolve(Type service)
         {
-            IRequest req = CreateRequest(service);
-            return Resolve(req);
+            return _scope.Resolve (service);
         }
 
         /// <summary>
@@ -201,11 +199,7 @@ namespace Envelop
         /// <exception cref="BindingNotFoundException"></exception>
         public object Resolve(IRequest req)
         {
-            var binding = ResolveBindings(req).FirstOrDefault();
-            if (binding == null)
-                throw new BindingNotFoundException(req);
-
-            return binding.Activate(req);
+            return this._scope.Resolve (req);
         }
 
         #endregion
@@ -241,9 +235,7 @@ namespace Envelop
         /// <returns></returns>
         public IEnumerable<object> ResolveAll(IRequest req)
         {
-            //create a copy of the bindings so we dont have enumeration conflicts
-            var bindings = ResolveBindings(req).ToArray();
-            return bindings.Select(b => b.Activate(req));
+            return _scope.ResolveAll (req);
         }
 
         #endregion
@@ -259,7 +251,7 @@ namespace Envelop
         /// </returns>
         public bool CanResolve(Type service)
         {
-            return CanResolve(CreateRequest(service));
+            return _scope.CanResolve (service);
         }
 
         /// <summary>
@@ -271,7 +263,7 @@ namespace Envelop
         /// </returns>
         public bool CanResolve(IRequest request)
         {
-            return ResolveBindings(request).Any();
+            return _scope.CanResolve (request);
         }
 
         #endregion
@@ -285,7 +277,13 @@ namespace Envelop
         /// <returns></returns>
         public IBindingTo<T> Bind<T>()
         {
-            var binding = new Binding<T>();
+            var binding = new Binding<T>
+            {
+                Deactivator = o => {
+                    if (o is IDisposable) 
+                        ((IDisposable)o).Dispose();
+                },
+            };
             AddBinding(binding);
             return new BindingTo<T>(binding);
         }
@@ -297,7 +295,14 @@ namespace Envelop
         /// <returns></returns>
         public IBindingTo Bind(Type serviceType)
         {
-            var binding = new Binding(serviceType);
+            var binding = new Binding(serviceType)
+            {
+                Deactivator = o =>
+                {
+                    if (o is IDisposable)
+                        ((IDisposable)o).Dispose();
+                },
+            };
             AddBinding(binding);
             return new BindingTo(binding);
         }
@@ -324,35 +329,48 @@ namespace Envelop
         }
 
         /// <summary>
-        /// Gets the bindings.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<IBinding> GetBindings()
-        {
-            return _bindings.ToArray();
-        }
-
-        /// <summary>
         /// Adds a binding.
         /// </summary>
         /// <param name="binding">The binding.</param>
         public void AddBinding(IBinding binding)
         {
-            _bindings.Add(binding);
+            _bindingResolver.AddBinding(binding);
+        }
+
+        #endregion
+
+        #region Lifecycle
+        /// <summary>
+        /// Creates a child scope.
+        /// </summary>
+        /// <returns>
+        /// The scope.
+        /// </returns>
+        public IScope CreateScope()
+        {
+            return _scope.CreateScope();
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            _scope.Dispose();
         }
 
         #endregion
 
         #region Helper Methods
 
-        private IEnumerable<IBinding> ResolveBindings(IRequest req)
-        {
-            return _bindingResolver.Resolve(this.GetBindings(), req);
-        }
-
         private Request CreateRequest(Type service)
         {
-            return new Request { Resolver = this, ServiceType = service };
+            return new Request 
+        {
+                Resolver = this, 
+                ServiceType = service,
+                CurrentScope = _scope
+            };
         }
 
         private static bool IsIgnoredAssembly(Assembly assembly)
@@ -390,5 +408,6 @@ namespace Envelop
             return ignoreChecks.Any(check => check(type));
         }
         #endregion
+
     }
 }

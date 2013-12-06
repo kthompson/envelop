@@ -29,12 +29,6 @@ namespace Envelop
         IBindingTo Bind(Type type);
 
         /// <summary>
-        /// Gets the registered bindings.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<IBinding> GetBindings();
-
-        /// <summary>
         /// Registers the specified service type.
         /// </summary>
         /// <param name="serviceType">Type of the service.</param>

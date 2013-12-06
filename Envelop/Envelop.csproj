@@ -11,6 +11,8 @@
     <AssemblyName>Envelop</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,15 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activation.cs" />
     <Compile Include="ActivationFailedException.cs" />
     <Compile Include="Binding.cs" />
     <Compile Include="BindingConstraint.cs" />
     <Compile Include="BindingContraints.cs" />
     <Compile Include="BindingNotFoundException.cs" />
+    <Compile Include="IActivation.cs" />
     <Compile Include="IModule.cs" />
     <Compile Include="IncompleteBindingException.cs" />
     <Compile Include="DefaultBindingResolver.cs" />
     <Compile Include="BindingTo.cs" />
+    <Compile Include="IScope.cs" />
     <Compile Include="Kernel.cs" />
     <Compile Include="IBinding.cs" />
     <Compile Include="IBindingContraints.cs" />
@@ -62,9 +67,10 @@
     <Compile Include="IBindingConstraint.cs" />
     <Compile Include="IKernel.cs" />
     <Compile Include="IRequest.cs" />
-    <Compile Include="IResolver.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="IResolver.cs" />
+    <Compile Include="Scope.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

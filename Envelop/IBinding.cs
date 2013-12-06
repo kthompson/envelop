@@ -29,7 +29,7 @@ namespace Envelop
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns></returns>
-        object Activate(IRequest request);
+		IActivation Activate(IRequest request);
 
         /// <summary>
         /// Gets or sets the builder.
@@ -38,6 +38,14 @@ namespace Envelop
         /// The builder.
         /// </value>
         Func<IRequest, object> Activator { get; set; }
+
+        /// <summary>
+        /// Gets or sets the deactivator.
+        /// </summary>
+        /// <value>
+        /// The deactivator.
+        /// </value>
+        Action<object> Deactivator { get; set; }
     }
 
     /// <summary>
