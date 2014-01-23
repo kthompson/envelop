@@ -36,9 +36,86 @@ namespace Envelop
         /// Creates an instance of the Kernel.
         /// </summary>
         /// <returns></returns>
-        public static IKernel Create()
+        public static IKernel Create(bool autoRegister = false)
         {
-            return new Kernel();
+            var kernel = new Kernel();
+            if(autoRegister)
+                kernel.AutoRegister();
+
+            return kernel;
+        }
+
+        #endregion
+
+        #region Automatic Registration
+
+        private readonly object _registrationLock = new object();
+        /// <summary>
+        /// Automatically registers all interfaces and abstract classes.
+        /// </summary>
+        public void AutoRegister()
+        {
+            var asms = AppDomain.CurrentDomain.GetAssemblies().Where(a => !IsIgnoredAssembly(a)).ToList();
+
+            lock (_registrationLock)
+            {
+                var types = asms.SelectMany(GetTypes).Where(type => !IsIgnoredType(type)).ToList();
+                var concreteTypes = GetConcreteTypes(types).ToList();
+                var abstractTypes = GetAbstractTypes(types);
+
+                foreach (var type in concreteTypes)
+                {
+                    this.Bind(type).To(type);
+                }
+
+                foreach (var abstractType in abstractTypes)
+                {
+                    var type = abstractType;
+                    var implementations = from implementation in concreteTypes
+                                          where type.IsAssignableFrom(implementation)
+                                          select implementation;
+
+                    var first = implementations.FirstOrDefault();
+                    if (first == null) 
+                        continue;
+
+                    this.Bind(abstractType).To(first);
+                }
+            }
+        }
+
+        private IEnumerable<Type> GetConcreteTypes(IEnumerable<Type> types)
+        {
+            return types.Where(t => t.IsClass && !t.IsAbstract && !t.IsGenericTypeDefinition && t != this.GetType());
+        }
+
+        private IEnumerable<Type> GetAbstractTypes(IEnumerable<Type> types)
+        {
+            return types.Where(t => (t.IsAbstract || t.IsInterface) && !t.IsGenericTypeDefinition && t != this.GetType());
+        }
+
+        static Type[] GetTypes(Assembly assembly)
+        {
+            Type[] assemblies;
+
+            try
+            {
+                assemblies = assembly.GetTypes();
+            }
+            catch (System.IO.FileNotFoundException)
+            {
+                assemblies = new Type[] { };
+            }
+            catch (NotSupportedException)
+            {
+                assemblies = new Type[] { };
+            }
+            catch (ReflectionTypeLoadException e)
+            {
+                assemblies = e.Types.Where(t => t != null).ToArray();
+            }
+
+            return assemblies;
         }
 
         #endregion
@@ -261,6 +338,40 @@ namespace Envelop
         private Request CreateRequest(Type service)
         {
             return new Request { Resolver = this, ServiceType = service };
+        }
+
+        private static bool IsIgnoredAssembly(Assembly assembly)
+        {
+            var ignorePatterns = new[]
+            {
+                "Microsoft.",
+                "System.",
+                "System,",
+                "mscorlib,",
+                "JetBrains,",
+                "Envelop,"
+            };
+
+            return ignorePatterns.Any(ignorePattern => assembly.FullName.StartsWith(ignorePattern, StringComparison.Ordinal));
+        }
+
+        private static bool IsIgnoredType(Type type, Func<Type, bool> registrationPredicate = null)
+        {
+            var ignoreChecks = new List<Func<Type, bool>>
+            {
+                t => t.FullName.StartsWith("System.", StringComparison.Ordinal),
+                t => t.FullName.StartsWith("Microsoft.", StringComparison.Ordinal),
+                t => t.IsPrimitive,
+                t => t.IsGenericTypeDefinition,
+                t => (t.GetConstructors(BindingFlags.Instance | BindingFlags.Public).Length == 0) && !(t.IsInterface || t.IsAbstract),
+            };
+
+            if (registrationPredicate != null)
+            {
+                ignoreChecks.Add(t => !registrationPredicate(t));
+            }
+
+            return ignoreChecks.Any(check => check(type));
         }
         #endregion
     }

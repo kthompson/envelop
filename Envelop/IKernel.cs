@@ -22,5 +22,10 @@ namespace Envelop
         /// </summary>
         /// <param name="modules">The modules.</param>
         void Load(params IModule[] modules);
+
+        /// <summary>
+        /// Automatically registers all interfaces.
+        /// </summary>
+        void AutoRegister();
     }
 }
