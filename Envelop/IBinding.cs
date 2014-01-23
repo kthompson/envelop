@@ -4,14 +4,6 @@ using System.Collections.Generic;
 namespace Envelop
 {
     /// <summary>
-    /// A type specific version of IBinding <c ref=""></c>
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface IBinding<T> : IBinding
-    {
-    }
-
-    /// <summary>
     /// A generic of a binding.
     /// </summary>
     public interface IBinding
@@ -23,7 +15,6 @@ namespace Envelop
         /// The type of the service.
         /// </value>
         Type ServiceType { get; }
-
 
         /// <summary>
         /// Gets the constraints.
@@ -47,5 +38,13 @@ namespace Envelop
         /// The builder.
         /// </value>
         Func<IRequest, object> Activator { get; set; }
+    }
+
+    /// <summary>
+    /// A type specific version of IBinding <c ref=""></c>
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public interface IBinding<T> : IBinding
+    {
     }
 }

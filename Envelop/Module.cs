@@ -56,6 +56,19 @@ namespace Envelop
         }
 
         /// <summary>
+        /// Interface for defining bindings.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
+        /// <example>
+        /// TODO: insert some basic examples
+        ///   </example>
+        public IBindingTo Bind(Type type)
+        {
+            return this.Kernel.Bind(type);
+        }
+
+        /// <summary>
         /// Gets the bindings.
         /// </summary>
         /// <returns></returns>

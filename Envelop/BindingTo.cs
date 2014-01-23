@@ -2,24 +2,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Envelop
 {
-    class BindingTo<T> : IBindingTo<T>
+    class BindingTo : IBindingTo
     {
-        private readonly IBinding<T> _binding;
 
-        public BindingTo(IBinding<T> binding)
+        private readonly IBinding _binding;
+
+        public BindingTo(IBinding binding)
         {
             _binding = binding;
         }
 
-        public IBindingContraints<T> To<TImplementation>() 
-            where TImplementation : T
+        public IBindingContraints To(object instance)
         {
-            var targetType = typeof (TImplementation);
+            _binding.Activator = req => instance;
 
-            var cache = targetType.GetConstructors().Select(ctor => new {Constructor = ctor, Parameters = ctor.GetParameters()}).ToArray();
+            return Constraints();
+        }
+
+        public IBindingContraints To(Func<IResolver, object> func)
+        {
+            _binding.Activator = req => func(req.Resolver);
+
+            return Constraints();
+        }
+
+        public IBindingContraints To(Type targetType)
+        {
+            var cache = targetType.GetConstructors()
+                .Select(ctor => new {Constructor = ctor, Parameters = ctor.GetParameters()})
+                .ToArray();
 
             _binding.Activator = req =>
             {
@@ -29,14 +44,15 @@ namespace Envelop
                 foreach (var item in cache)
                 {
                     // Create a request to see if we can resolve all parameters of this ctor
-                    var requests = item.Parameters.Select(p => CreateRequest(req, targetType, p.ParameterType)).ToArray();
-                    if (!requests.All(resolver.CanResolve)) 
+                    var requests =
+                        item.Parameters.Select(p => CreateRequest(req, targetType, p.ParameterType)).ToArray();
+                    if (!requests.All(resolver.CanResolve))
                         continue;
 
                     //Now lets resolve each parameter for this ctor
                     var args = requests.Select(request =>
                     {
-                        if(request.MultiInjection == MultiInjection.None)
+                        if (request.MultiInjection == MultiInjection.None)
                             return resolver.Resolve(request);
 
                         var enumerable = resolver.ResolveAll(request).ToArray();
@@ -44,7 +60,8 @@ namespace Envelop
                         if (request.MultiInjection == MultiInjection.List)
                             return CreateList(enumerable, request.ServiceType);
 
-                        if (request.MultiInjection == MultiInjection.Enumerable || request.MultiInjection == MultiInjection.Array)
+                        if (request.MultiInjection == MultiInjection.Enumerable ||
+                            request.MultiInjection == MultiInjection.Array)
                             return CreateArray(enumerable, request.ServiceType);
 
                         throw new ActivationFailedException();
@@ -54,7 +71,7 @@ namespace Envelop
                 }
 
                 // we couldnt find a ctor that we could activate
-                throw new BindingNotFoundException();
+                throw new BindingNotFoundException(req, targetType);
             };
 
             return Constraints();
@@ -112,25 +129,35 @@ namespace Envelop
             };
         }
 
-        public IBindingContraints<T> To<TImplementation>(Func<IResolver, TImplementation> func) 
-            where TImplementation : T
+        private BindingContraints Constraints()
         {
-            _binding.Activator = req => func(req.Resolver);
+            return new BindingContraints(_binding);
+        }
+    }
 
-            return Constraints();
+    class BindingTo<T> : BindingTo, IBindingTo<T>
+    {
+        public BindingTo(IBinding<T> binding)
+            : base(binding)
+        {
         }
 
-        public IBindingContraints<T> To<TImplementation>(TImplementation instance) 
+        public IBindingContraints To<TImplementation>() 
             where TImplementation : T
         {
-            _binding.Activator = req => instance;
-
-            return Constraints();
+            return base.To(typeof (TImplementation));
         }
 
-        private BindingContraints<T> Constraints()
+        public IBindingContraints To<TImplementation>(Func<IResolver, TImplementation> func) 
+            where TImplementation : T
         {
-            return new BindingContraints<T>(_binding);
+            return base.To(resolver => func(resolver));
+        }
+
+        public IBindingContraints To<TImplementation>(TImplementation instance) 
+            where TImplementation : T
+        {
+            return base.To(instance);
         }
     }
 }

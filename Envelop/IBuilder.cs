@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Envelop
 {
@@ -16,6 +17,16 @@ namespace Envelop
         /// TODO: insert some basic examples
         /// </example>
         IBindingTo<TInterface> Bind<TInterface>();
+
+        /// <summary>
+        /// Interface for defining bindings.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
+        /// <example>
+        /// TODO: insert some basic examples
+        /// </example>
+        IBindingTo Bind(Type type);
 
         /// <summary>
         /// Gets the registered bindings.

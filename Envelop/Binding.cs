@@ -3,16 +3,12 @@ using System.Collections.Generic;
 
 namespace Envelop
 {
-    class Binding<T> : IBinding<T>
+    class Binding : IBinding
     {
-        public Binding()
+        public Binding(Type serviceType)
         {
+            this.ServiceType = serviceType;
             this.Constraints = new List<IBindingConstraint>();
-        }
-
-        public Type ServiceType
-        {
-            get { return typeof (T); }
         }
 
         public object Activate(IRequest request)
@@ -25,8 +21,20 @@ namespace Envelop
         }
 
         public Func<IRequest, object> Activator { get; set; }
-
+        public Type ServiceType { get; private set; }
         public List<IBindingConstraint> Constraints { get; private set; }
 
+        public override string ToString()
+        {
+            return this.ServiceType.ToString();
+        }
+    }
+
+    class Binding<T> : Binding, IBinding<T>
+    {
+        public Binding()
+            : base(typeof(T))
+        {
+        }
     }
 }

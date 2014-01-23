@@ -129,7 +129,7 @@ namespace Envelop
         {
             var binding = ResolveBindings(req).FirstOrDefault();
             if (binding == null)
-                throw new BindingNotFoundException();
+                throw new BindingNotFoundException(req);
 
             return binding.Activate(req);
         }
@@ -167,7 +167,9 @@ namespace Envelop
         /// <returns></returns>
         public IEnumerable<object> ResolveAll(IRequest req)
         {
-            return ResolveBindings(req).Select(b => b.Activate(req));
+            //create a copy of the bindings so we dont have enumeration conflicts
+            var bindings = ResolveBindings(req).ToArray();
+            return bindings.Select(b => b.Activate(req));
         }
 
         #endregion
@@ -209,7 +211,24 @@ namespace Envelop
         /// <returns></returns>
         public IBindingTo<T> Bind<T>()
         {
-            return new BindingTo<T>(CreateBinding<T>());
+            var binding = new Binding<T>();
+            
+            AddBinding(binding);
+            
+            return new BindingTo<T>(binding);
+        }
+
+
+        /// <summary>
+        /// Binds the specified type.
+        /// </summary>
+        /// <param name="serviceType">The service type.</param>
+        /// <returns></returns>
+        public IBindingTo Bind(Type serviceType)
+        {
+            var binding = new Binding(serviceType);
+            AddBinding(binding);
+            return new BindingTo(binding);
         }
 
         /// <summary>
@@ -233,13 +252,6 @@ namespace Envelop
         #endregion
 
         #region Helper Methods
-
-        private Binding<T> CreateBinding<T>()
-        {
-            var binding = new Binding<T>();
-            AddBinding(binding);
-            return binding;
-        }
 
         private IEnumerable<IBinding> ResolveBindings(IRequest req)
         {

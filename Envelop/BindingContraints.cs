@@ -2,32 +2,32 @@
 
 namespace Envelop
 {
-    class BindingContraints<T> : IBindingContraints<T>
+    class BindingContraints : IBindingContraints
     {
-        private readonly IBinding<T> _binding;
+        private readonly IBinding _binding;
 
-        public BindingContraints(IBinding<T> binding)
+        public BindingContraints(IBinding binding)
         {
             _binding = binding;
         }
 
-        public IBindingContraints<T> When(Predicate<IRequest> predicate)
+        public IBindingContraints When(Predicate<IRequest> predicate)
         {
             _binding.Constraints.Add(new BindingConstraint(predicate));
             return this;
         }
 
-        public IBindingContraints<T> AsSingleton()
+        public IBindingContraints AsSingleton()
         {
             var original = _binding.Activator;
-            object instance = default(T);
+            object instance = null;
             _binding.Activator = req =>
-                {
-                    if (Equals(instance, default(T)))
-                        instance = original(req);
+            {
+                if (Equals(instance, null))
+                    instance = original(req);
 
-                    return instance;
-                };
+                return instance;
+            };
 
             return this;
         }
