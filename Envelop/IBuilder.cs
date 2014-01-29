@@ -35,6 +35,21 @@ namespace Envelop
         IEnumerable<IBinding> GetBindings();
 
         /// <summary>
+        /// Registers the specified service type.
+        /// </summary>
+        /// <param name="serviceType">Type of the service.</param>
+        /// <param name="instanceType">Type of the instance.</param>
+        /// <returns></returns>
+        IBindingContraints Register(Type serviceType, Type instanceType);
+
+        /// <summary>
+        /// Registers the specified instance type.
+        /// </summary>
+        /// <param name="instanceType">Type of the instance.</param>
+        /// <returns></returns>
+        IBindingContraints Register(Type instanceType);
+
+        /// <summary>
         /// Adds the specified binding.
         /// </summary>
         /// <param name="binding">The binding.</param>

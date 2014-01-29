@@ -289,12 +289,9 @@ namespace Envelop
         public IBindingTo<T> Bind<T>()
         {
             var binding = new Binding<T>();
-            
             AddBinding(binding);
-            
             return new BindingTo<T>(binding);
         }
-
 
         /// <summary>
         /// Binds the specified type.
@@ -306,6 +303,27 @@ namespace Envelop
             var binding = new Binding(serviceType);
             AddBinding(binding);
             return new BindingTo(binding);
+        }
+
+        /// <summary>
+        /// Registers the specified service type.
+        /// </summary>
+        /// <param name="serviceType">Type of the service.</param>
+        /// <param name="instanceType">Type of the instance.</param>
+        /// <returns></returns>
+        public IBindingContraints Register(Type serviceType, Type instanceType)
+        {
+            return this.Bind(serviceType).To(instanceType);
+        }
+
+        /// <summary>
+        /// Registers the specified instance type.
+        /// </summary>
+        /// <param name="instanceType">Type of the instance.</param>
+        /// <returns></returns>
+        public IBindingContraints Register(Type instanceType)
+        {
+            return this.Bind(instanceType).To(instanceType);
         }
 
         /// <summary>

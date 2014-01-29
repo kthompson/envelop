@@ -69,6 +69,27 @@ namespace Envelop
         }
 
         /// <summary>
+        /// Registers the specified service type.
+        /// </summary>
+        /// <param name="serviceType">Type of the service.</param>
+        /// <param name="instanceType">Type of the instance.</param>
+        /// <returns></returns>
+        public IBindingContraints Register(Type serviceType, Type instanceType)
+        {
+            return this.Kernel.Register(serviceType, instanceType);
+        }
+
+        /// <summary>
+        /// Registers the specified instance type.
+        /// </summary>
+        /// <param name="instanceType">Type of the instance.</param>
+        /// <returns></returns>
+        public IBindingContraints Register(Type instanceType)
+        {
+            return this.Kernel.Register(instanceType);
+        }
+
+        /// <summary>
         /// Gets the bindings.
         /// </summary>
         /// <returns></returns>
