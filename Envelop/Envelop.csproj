@@ -44,9 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivationFailedException.cs" />
     <Compile Include="Binding.cs" />
     <Compile Include="BindingConstraint.cs" />
     <Compile Include="BindingContraints.cs" />
+    <Compile Include="BindingNotFoundException.cs" />
     <Compile Include="IModule.cs" />
     <Compile Include="IncompleteBindingException.cs" />
     <Compile Include="DefaultBindingResolver.cs" />
