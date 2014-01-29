@@ -21,6 +21,16 @@ namespace Envelop.Tests
             }
         }
 
+        class SimpleModuleTestModule2 : Module
+        {
+            protected override void Load()
+            {
+                this.Bind(typeof(ISomeInterface)).To(typeof(SomeInterfaceImplementation));
+                this.Register(typeof(SomeInterfaceImplementation2));
+                this.Register(typeof(IMultiInterface), typeof(MultiInterfaceImplementation));
+            }
+        }
+
         [Test]
         public void SimpleModuleTest()
         {
@@ -37,6 +47,31 @@ namespace Envelop.Tests
         }
 
         [Test]
+        public void SimpleModuleTest2()
+        {
+            var kernel = Kernel.Create();
+            kernel.Load(new SimpleModuleTestModule2());
+
+            var t1 = kernel.Resolve<IMultiInterface>();
+
+            Assert.NotNull(t1);
+            Assert.NotNull(t1.SomeInterfaces);
+            Assert.AreEqual(1, t1.SomeInterfaces.Length);
+            Assert.That(t1.SomeInterfaces[0] is SomeInterfaceImplementation);
+        }
+
+        [Test]
+        public void SimpleModuleTest3()
+        {
+            var kernel = Kernel.Create();
+            kernel.Load(new SimpleModuleTestModule2());
+
+            var t1 = kernel.Resolve<SomeInterfaceImplementation2>();
+
+            Assert.NotNull(t1);
+        }
+
+        [Test]
         public void SimpleAssemblyModuleTest()
         {
             var kernel = Kernel.Create();
@@ -46,9 +81,10 @@ namespace Envelop.Tests
 
             Assert.NotNull(t1);
             Assert.NotNull(t1.SomeInterfaces);
-            Assert.AreEqual(2, t1.SomeInterfaces.Length);
+            Assert.AreEqual(3, t1.SomeInterfaces.Length);
             Assert.That(t1.SomeInterfaces[0] is SomeInterfaceImplementation);
             Assert.That(t1.SomeInterfaces[1] is SomeInterfaceImplementation2);
+            Assert.That(t1.SomeInterfaces[2] is SomeInterfaceImplementation);
         }
 
         [Test]
@@ -61,9 +97,10 @@ namespace Envelop.Tests
 
             Assert.NotNull(t1);
             Assert.NotNull(t1.SomeInterfaces);
-            Assert.AreEqual(2, t1.SomeInterfaces.Length);
+            Assert.AreEqual(3, t1.SomeInterfaces.Length);
             Assert.That(t1.SomeInterfaces[0] is SomeInterfaceImplementation);
             Assert.That(t1.SomeInterfaces[1] is SomeInterfaceImplementation2);
+            Assert.That(t1.SomeInterfaces[2] is SomeInterfaceImplementation);
         }
     }
 }

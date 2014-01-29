@@ -26,5 +26,14 @@ namespace Envelop.Tests
             var kernel = Kernel.Create();
             kernel.Resolve<ISomeInterface>();
         }
+
+        [Test, ExpectedException(typeof(BindingNotFoundException))]
+        public void BindingNotFoundDueToNoValidConstructor()
+        {
+            var kernel = Kernel.Create();
+            //We dont define a binding for ISomeInterface which is required in the ctor of AnotherInterfaceImplementation
+            kernel.Bind<IAnotherInterface>().To<AnotherInterfaceImplementation>();
+            kernel.Resolve<IAnotherInterface>();
+        }
     }
 }

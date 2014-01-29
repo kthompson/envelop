@@ -75,11 +75,8 @@ namespace Envelop
                                           where type.IsAssignableFrom(implementation)
                                           select implementation;
 
-                    var first = implementations.FirstOrDefault();
-                    if (first == null) 
-                        continue;
-
-                    this.Bind(abstractType).To(first);
+                    foreach (var implementation in implementations)
+                        this.Register(type, implementation);
                 }
             }
         }
@@ -366,7 +363,8 @@ namespace Envelop
                 "System.",
                 "System,",
                 "mscorlib,",
-                "JetBrains,",
+                "JetBrains.",
+                "nunit.",
                 "Envelop,"
             };
 
