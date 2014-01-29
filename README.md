@@ -63,7 +63,7 @@ class MultiInterfaceImplementation : IMultiInterface
 ### Fluent
 
 ```c#
-var kernel = new Kernel();
+var kernel = Kernel.Create();
 
 // Automatic construction
 kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>();
@@ -83,7 +83,7 @@ kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation2>().When(req => typ
 ### Injection
 
 ```c#
-var kernel = new Kernel();
+var kernel = Kernel.Create();
 kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>();
 kernel.Bind<IAnotherInterface>().To<AnotherInterfaceImplementation>();
 
@@ -93,7 +93,7 @@ var anotherInterfaceInstance = kernel.Resolve<IAnotherInterface>();
 ### Multi-injection
 
 ```c#
-var kernel = new Kernel();
+var kernel = Kernel.Create();
 kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>();
 kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation2>();
 kernel.Bind<IMultiInterface>().To<MultiInterfaceImplementation>();
