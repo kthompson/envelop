@@ -36,6 +36,14 @@ namespace Envelop
 
             foreach (var r in fullfillments)
             {
+                if (r.Item2 == null)
+                {
+                    sb.AppendFormat("Attempting to resolve '{0}' failed without finding a valid implementation", r.Item1.Name);
+                    sb.AppendLine();
+
+                    return sb.ToString();
+                }
+
                 sb.AppendFormat("Attempting to resolve '{0}' with '{1}'", r.Item1.Name, r.Item2.Name);
                 sb.AppendLine();
             }
