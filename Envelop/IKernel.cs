@@ -24,11 +24,11 @@ namespace Envelop
         /// <param name="modules">The modules.</param>
         void Load(params IModule[] modules);
 
-		/// <summary>
-		/// Creates a child scope.
-		/// </summary>
-		/// <returns>The scope.</returns>
-		IScope CreateScope ();
+        /// <summary>
+        /// Creates a child scope.
+        /// </summary>
+        /// <returns>The scope.</returns>
+        IScope CreateScope();
 
         /// <summary>
         /// Automatically registers all interfaces.
