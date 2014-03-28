@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace Envelop
@@ -34,5 +35,10 @@ namespace Envelop
         /// Automatically registers all interfaces.
         /// </summary>
         void AutoRegister();
+
+        /// <summary>
+        /// Automatically registers all interfaces.
+        /// </summary>
+        void AutoRegister(IEnumerable<Assembly> assemblies);
     }
 }

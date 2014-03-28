@@ -55,7 +55,16 @@ namespace Envelop
         /// </summary>
         public void AutoRegister()
         {
-            var asms = AppDomain.CurrentDomain.GetAssemblies().Where(a => !IsIgnoredAssembly(a)).ToList();
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => !IsIgnoredAssembly(a));
+            AutoRegister(assemblies);
+        }
+
+        /// <summary>
+        /// Automatically registers all interfaces and abstract classes.
+        /// </summary>
+        public void AutoRegister(IEnumerable<Assembly> assemblies)
+        {
+            var asms = assemblies.ToList();
 
             lock (_registrationLock)
             {
@@ -72,8 +81,8 @@ namespace Envelop
                 {
                     var type = abstractType;
                     var implementations = from implementation in concreteTypes
-                                          where type.IsAssignableFrom(implementation)
-                                          select implementation;
+                        where type.IsAssignableFrom(implementation)
+                        select implementation;
 
                     foreach (var implementation in implementations)
                         this.Register(type, implementation);
