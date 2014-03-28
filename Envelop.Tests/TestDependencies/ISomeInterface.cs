@@ -8,16 +8,38 @@ namespace Envelop.Tests.TestDependencies
 {
     interface ISomeInterface
     {
+        object Value1 { get; set; }
+        object Value2 { get; set; }
+        object Value3 { get; set; }
+        object Value4 { get; set; }
+        object Value5 { get; set; }
     }
 
     class SomeInterfaceImplementation : ISomeInterface
     {
+        public object Value1 { get; set; }
+        public object Value2 { get; set; }
+        public object Value3 { get; set; }
+        public object Value4 { get; set; }
+        public object Value5 { get; set; }
 
+        public SomeInterfaceImplementation()
+        {
+        }
+
+        public SomeInterfaceImplementation(int value)
+        {
+            this.Value1 = value;
+        }
     }
 
     class SomeInterfaceImplementation2 : ISomeInterface
     {
-
+        public object Value1 { get; set; }
+        public object Value2 { get; set; }
+        public object Value3 { get; set; }
+        public object Value4 { get; set; }
+        public object Value5 { get; set; }
     }
 
     interface IAnotherInterface

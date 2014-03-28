@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="ConstraintsTests.cs" />
     <Compile Include="ExceptionsTests.cs" />
+    <Compile Include="FactoryMethodTests.cs" />
     <Compile Include="FluentTests.cs" />
     <Compile Include="InjectionTests.cs" />
     <Compile Include="ModuleTests.cs" />

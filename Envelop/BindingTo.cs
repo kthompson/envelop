@@ -155,6 +155,59 @@ namespace Envelop
             return base.To(resolver => func(resolver));
         }
 
+        public IBindingContraints To<TImplementation, T1>(Func<T1, TImplementation> func) where TImplementation : T
+        {
+            return base.To(resolve => func(resolve.Resolve<T1>()));
+        }
+
+        public IBindingContraints To<TImplementation, T1, T2>(Func<T1, T2, TImplementation> func) where TImplementation : T
+        {
+            return base.To(resolve => func(resolve.Resolve<T1>(), resolve.Resolve<T2>()));
+        }
+
+        public IBindingContraints To<TImplementation, T1, T2, T3>(Func<T1, T2, T3, TImplementation> func) where TImplementation : T
+        {
+            return base.To(resolve => func(resolve.Resolve<T1>(), resolve.Resolve<T2>(), resolve.Resolve<T3>()));
+        }
+
+        public IBindingContraints To<TImplementation, T1, T2, T3, T4>(Func<T1, T2, T3, T4, TImplementation> func) where TImplementation : T
+        {
+            return base.To(resolve => func(resolve.Resolve<T1>(), resolve.Resolve<T2>(), resolve.Resolve<T3>(), resolve.Resolve<T4>()));
+        }
+
+        public IBindingContraints To<TImplementation, T1, T2, T3, T4, T5>(Func<T1, T2, T3, T4, T5, TImplementation> func) where TImplementation : T
+        {
+            return base.To(resolve => func(
+                resolve.Resolve<T1>(),
+                resolve.Resolve<T2>(),
+                resolve.Resolve<T3>(),
+                resolve.Resolve<T4>(),
+                resolve.Resolve<T5>()));
+        }
+
+        public IBindingContraints To<TImplementation, T1, T2, T3, T4, T5, T6>(Func<T1, T2, T3, T4, T5, T6, TImplementation> func) where TImplementation : T
+        {
+            return base.To(resolve => func(
+                resolve.Resolve<T1>(),
+                resolve.Resolve<T2>(),
+                resolve.Resolve<T3>(),
+                resolve.Resolve<T4>(),
+                resolve.Resolve<T5>(),
+                resolve.Resolve<T6>()));
+        }
+
+        public IBindingContraints To<TImplementation, T1, T2, T3, T4, T5, T6, T7>(Func<T1, T2, T3, T4, T5, T6, T7, TImplementation> func) where TImplementation : T
+        {
+            return base.To(resolve => func(
+                resolve.Resolve<T1>(),
+                resolve.Resolve<T2>(),
+                resolve.Resolve<T3>(),
+                resolve.Resolve<T4>(),
+                resolve.Resolve<T5>(),
+                resolve.Resolve<T6>(),
+                resolve.Resolve<T7>()));
+        }
+
         public IBindingContraints To<TImplementation>(TImplementation instance) 
             where TImplementation : T
         {

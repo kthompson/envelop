@@ -27,6 +27,23 @@ namespace Envelop.Tests
 
             Assert.AreNotSame(t1, t2);
             Assert.AreNotSame(t2, t3);
+            Assert.AreNotSame(t1, t3);
+
+            Assert.That(t1 is SomeInterfaceImplementation);
+            Assert.That(t2 is SomeInterfaceImplementation);
+            Assert.That(t3 is SomeInterfaceImplementation);
+        }
+
+        [Test]
+        public void ResolveCanUseTypeParameter()
+        {
+            var kernel = Kernel.Create();
+            kernel.Bind<ISomeInterface>().To(typeof(SomeInterfaceImplementation));
+
+            var t1 = kernel.Resolve(typeof(ISomeInterface));
+
+            Assert.NotNull(t1);
+            Assert.That(t1 is SomeInterfaceImplementation);
         }
 
         [Test]
@@ -36,8 +53,9 @@ namespace Envelop.Tests
             kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>();
 
             var t1 = kernel.Resolve(typeof(ISomeInterface));
-            
+
             Assert.NotNull(t1);
+            Assert.That(t1 is SomeInterfaceImplementation);
         }
 
         [Test]
@@ -56,6 +74,10 @@ namespace Envelop.Tests
 
             Assert.AreNotSame(t1, t2);
             Assert.AreNotSame(t2, t3);
+
+            Assert.That(t1 is SomeInterfaceImplementation);
+            Assert.That(t2 is SomeInterfaceImplementation);
+            Assert.That(t3 is SomeInterfaceImplementation);
         }
 
         [Test]
@@ -74,6 +96,10 @@ namespace Envelop.Tests
 
             Assert.AreSame(t1, t2);
             Assert.AreSame(t2, t3);
+
+            Assert.That(t1 is SomeInterfaceImplementation);
+            Assert.That(t2 is SomeInterfaceImplementation);
+            Assert.That(t3 is SomeInterfaceImplementation);
         }
 
         [Test]
