@@ -55,7 +55,7 @@ class MultiInterfaceImplementation : IMultiInterface
 
 	public MultiInterfaceImplementation(ISomeInterface[] someInterfaces)
 	{
-    		this.SomeInterfaces = someInterfaces;
+		this.SomeInterfaces = someInterfaces;
 	}
 }
 

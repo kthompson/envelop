@@ -12,7 +12,7 @@ namespace Envelop
         /// Resolves a given type based on the generic type parameter.
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-		/// </summary>
+        /// </summary>
         T Resolve<T>();
 
         /// <summary>

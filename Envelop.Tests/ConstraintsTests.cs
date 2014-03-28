@@ -48,40 +48,43 @@ namespace Envelop.Tests
             Assert.AreSame(t2, t3);
         }
 
-		[Test]
-		public void BindInterfaceToBuilderAsSingleton()
-		{
-			var kernel = Kernel.Create();
-			kernel.Bind<ISomeInterface>().To(req => new SomeInterfaceImplementation()).AsSingleton();
+        [Test]
+        public void BindInterfaceToBuilderAsSingleton()
+        {
+            var kernel = Kernel.Create();
+            kernel.Bind<ISomeInterface>().To(req => new SomeInterfaceImplementation()).AsSingleton();
 
-			var t1 = kernel.Resolve<ISomeInterface>();
-			var t2 = kernel.Resolve<ISomeInterface>();
-			var t3 = kernel.Resolve<ISomeInterface>();
+            var t1 = kernel.Resolve<ISomeInterface>();
+            var t2 = kernel.Resolve<ISomeInterface>();
+            var t3 = kernel.Resolve<ISomeInterface>();
 
-			Assert.NotNull(t1);
-			Assert.NotNull(t2);
-			Assert.NotNull(t3);
+            Assert.NotNull(t1);
+            Assert.NotNull(t2);
+            Assert.NotNull(t3);
 
-			Assert.AreSame(t1, t2);
-			Assert.AreSame(t2, t3);
-		}
+            Assert.AreSame(t1, t2);
+            Assert.AreSame(t2, t3);
+        }
 
-		[Test]
-		public void BindInterfaceToBuilderWithDeactivation()
-		{
-			var value = false;
+        [Test]
+        public void BindInterfaceToBuilderWithDeactivation()
+        {
+            var value = false;
 
-			using (var kernel = Kernel.Create ()) {
+            using (var kernel = Kernel.Create())
+            {
 
-				kernel.Bind<ISomeInterface> ().To (req => new SomeInterfaceImplementation ()).AfterDeactivation (_ => value = true);
+                kernel.Bind<ISomeInterface>()
+                    .To(req => new SomeInterfaceImplementation())
+                    .AfterDeactivation(_ => value = true);
 
-				var t1 = kernel.Resolve<ISomeInterface> ();
+                var t1 = kernel.Resolve<ISomeInterface>();
 
-				Assert.NotNull (t1);
-				Assert.IsFalse (value);
-			}
+                Assert.NotNull(t1);
+                Assert.IsFalse(value);
+            }
 
-			Assert.IsTrue (value);
-		}
+            Assert.IsTrue(value);
+        }
     }
 }

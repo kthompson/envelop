@@ -65,7 +65,7 @@ namespace Envelop.Tests
             {
                 kernel.Bind<ISomeInterface> ().To<SomeInterfaceImplementation> ().AfterDeactivation(_ => disposed++);
 
-                rootObject = kernel.Resolve<ISomeInterface> ();	
+                rootObject = kernel.Resolve<ISomeInterface> ();
 
                 Assert.IsNotNull (rootObject);
                 Assert.AreEqual (0, disposed);

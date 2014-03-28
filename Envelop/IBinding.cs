@@ -29,7 +29,7 @@ namespace Envelop
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns></returns>
-		IActivation Activate(IRequest request);
+        IActivation Activate(IRequest request);
 
         /// <summary>
         /// Gets or sets the builder.

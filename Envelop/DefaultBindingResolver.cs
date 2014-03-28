@@ -5,17 +5,17 @@ namespace Envelop
 {
     class DefaultBindingResolver : IBindingResolver
     {
-		private readonly List<IBinding> _bindings;
+        private readonly List<IBinding> _bindings;
 
-		public DefaultBindingResolver ()
-		{
-			this._bindings = new List<IBinding>();
-		}
+        public DefaultBindingResolver()
+        {
+            this._bindings = new List<IBinding>();
+        }
 
-		public void AddBinding(IBinding binding)
-		{
-			this._bindings.Add (binding);
-		}
+        public void AddBinding(IBinding binding)
+        {
+            this._bindings.Add(binding);
+        }
 
         public IEnumerable<IBinding> Resolve(IRequest request)
         {

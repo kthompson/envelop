@@ -33,15 +33,16 @@ namespace Envelop
         }
 
         public IBindingContraints AfterDeactivation(Action<object> action)
-		{
-			var save = _binding.Deactivator ?? (o => {});
+        {
+            var save = _binding.Deactivator ?? (o => { });
 
-			_binding.Deactivator = o => {
-				save(o);
-				action(o);
-			};
+            _binding.Deactivator = o =>
+            {
+                save(o);
+                action(o);
+            };
 
-			return this;
-		}
+            return this;
+        }
     }
 }
