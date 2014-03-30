@@ -37,8 +37,9 @@ namespace Envelop.Tests
             Assert.NotNull(t1);
             Assert.NotNull(t1.SomeInterfaces);
             Assert.AreEqual(2, t1.SomeInterfaces.Length);
-            Assert.That(t1.SomeInterfaces[0] is SomeInterfaceImplementation);
-            Assert.That(t1.SomeInterfaces[1] is SomeInterfaceImplementation2);
+
+            Assert.That(t1.SomeInterfaces.OfType<SomeInterfaceImplementation2>().Count() == 1);
+            Assert.That(t1.SomeInterfaces.OfType<SomeInterfaceImplementation>().Count() == 1);
         }
 
         [Test]
@@ -54,8 +55,8 @@ namespace Envelop.Tests
             Assert.NotNull(t1);
             Assert.NotNull(t1.SomeInterfaces);
             Assert.AreEqual(2, t1.SomeInterfaces.Length);
-            Assert.That(t1.SomeInterfaces[0] is SomeInterfaceImplementation);
-            Assert.That(t1.SomeInterfaces[1] is SomeInterfaceImplementation2);
+            Assert.That(t1.SomeInterfaces.OfType<SomeInterfaceImplementation2>().Count() == 1);
+            Assert.That(t1.SomeInterfaces.OfType<SomeInterfaceImplementation>().Count() == 1);
         }
 
         [Test]
@@ -71,8 +72,9 @@ namespace Envelop.Tests
             Assert.NotNull(t1);
             Assert.NotNull(t1.SomeInterfaces);
             Assert.AreEqual(2, t1.SomeInterfaces.Length);
-            Assert.That(t1.SomeInterfaces[0] is SomeInterfaceImplementation);
-            Assert.That(t1.SomeInterfaces[1] is SomeInterfaceImplementation2);
+
+            Assert.That(t1.SomeInterfaces.OfType<SomeInterfaceImplementation2>().Count() == 1);
+            Assert.That(t1.SomeInterfaces.OfType<SomeInterfaceImplementation>().Count() == 1);
         }
     }
 }

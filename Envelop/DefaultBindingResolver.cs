@@ -14,7 +14,8 @@ namespace Envelop
 
         public void AddBinding(IBinding binding)
         {
-            this._bindings.Add(binding);
+            // always put bindings at the beginning so most recent bindings will be returned first
+            this._bindings.Insert(0, binding);
         }
 
         public IEnumerable<IBinding> Resolve(IRequest request)

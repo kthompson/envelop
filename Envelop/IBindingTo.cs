@@ -153,7 +153,7 @@ namespace Envelop
         /// </summary>
         /// <param name="func">The func.</param>
         /// <returns></returns>
-        IBindingContraints To(Func<IResolver, object> func);
+        IBindingContraints To<TImplementation>(Func<IResolver, TImplementation> func);
 
         /// <summary>
         /// Maps a binding to the specified type.

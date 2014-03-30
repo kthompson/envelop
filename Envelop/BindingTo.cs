@@ -8,7 +8,6 @@ namespace Envelop
 {
     class BindingTo : IBindingTo
     {
-
         private readonly IBinding _binding;
 
         public BindingTo(IBinding binding)
@@ -22,10 +21,10 @@ namespace Envelop
 
             return Constraints();
         }
-
-        public IBindingContraints To(Func<IResolver, object> func)
+        
+        public IBindingContraints To<TImplementation>(Func<IResolver, TImplementation> func)
         {
-            _binding.Activator = req => func(req.Resolver);
+            _binding.Activator = req => (object)func(req.Resolver);
 
             return Constraints();
         }
@@ -101,17 +100,17 @@ namespace Envelop
 
             if (serviceType.IsGenericType)
             {
-                if (serviceType.GetGenericTypeDefinition() == typeof (IEnumerable<>))
+                var genericTypeDefinition = serviceType.GetGenericTypeDefinition();
+                if (genericTypeDefinition == typeof (IEnumerable<>))
                 {
                     mi = MultiInjection.Enumerable;
                     serviceType = serviceType.GetGenericArguments()[0];
                 }
-                else if (serviceType.GetGenericTypeDefinition() == typeof(List<>))
+                else if (genericTypeDefinition == typeof(List<>))
                 {
                     mi = MultiInjection.List;
                     serviceType = serviceType.GetGenericArguments()[0];
                 }
-
             }
             else if (serviceType.IsArray)
             {
@@ -149,10 +148,10 @@ namespace Envelop
             return base.To(typeof (TImplementation));
         }
 
-        public IBindingContraints To<TImplementation>(Func<IResolver, TImplementation> func) 
+        public new IBindingContraints To<TImplementation>(Func<IResolver, TImplementation> func) 
             where TImplementation : T
         {
-            return base.To(resolver => func(resolver));
+            return base.To(func);
         }
 
         public IBindingContraints To<TImplementation, T1>(Func<T1, TImplementation> func) where TImplementation : T

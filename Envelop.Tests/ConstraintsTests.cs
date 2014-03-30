@@ -15,8 +15,8 @@ namespace Envelop.Tests
         public void BindToWhen()
         {
             var kernel = Kernel.Create();
-            kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation2>().When(req => typeof(IAnotherInterface).IsAssignableFrom(req.Target));
             kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>();
+            kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation2>().When(req => typeof(IAnotherInterface).IsAssignableFrom(req.Target)); 
             kernel.Bind<IAnotherInterface>().To<AnotherInterfaceImplementation>();
 
             var t1 = kernel.Resolve<ISomeInterface>();

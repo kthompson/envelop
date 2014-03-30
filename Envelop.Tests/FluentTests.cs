@@ -12,6 +12,43 @@ namespace Envelop.Tests
     public class FluentTests
     {
         [Test]
+        public void NewBindShouldOverrideExistingBind()
+        {
+            var kernel = Kernel.Create();
+            kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>();
+
+            var t1 = kernel.Resolve<ISomeInterface>();
+            var t2 = kernel.Resolve<ISomeInterface>();
+
+            Assert.NotNull(t1);
+            Assert.NotNull(t2);
+
+            Assert.AreNotSame(t1, t2);
+
+            Assert.That(t1 is SomeInterfaceImplementation);
+            Assert.That(t2 is SomeInterfaceImplementation);
+
+            //override existing bind
+            kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>().AsSingleton();
+
+            var t3 = kernel.Resolve<ISomeInterface>(); 
+            var t4 = kernel.Resolve<ISomeInterface>();
+            
+            Assert.NotNull(t3); 
+            Assert.NotNull(t4);
+
+            Assert.AreNotSame(t1, t3);
+            Assert.AreNotSame(t1, t4);
+            Assert.AreNotSame(t2, t3);
+            Assert.AreNotSame(t2, t4);
+
+            Assert.That(t3 is SomeInterfaceImplementation);
+            Assert.That(t4 is SomeInterfaceImplementation);
+
+            Assert.AreSame(t3, t4);
+        }
+
+        [Test]
         public void BindInterfaceToClass()
         {
             var kernel = Kernel.Create();
@@ -115,8 +152,8 @@ namespace Envelop.Tests
             var items = enumerable.ToArray();
             Assert.AreEqual(2, items.Length);
 
-            Assert.That(items[0] is SomeInterfaceImplementation);
-            Assert.That(items[1] is SomeInterfaceImplementation2);
+            Assert.That(items.OfType<SomeInterfaceImplementation2>().Count() == 1);
+            Assert.That(items.OfType<SomeInterfaceImplementation>().Count() == 1);
         }
 
         [Test]
@@ -132,8 +169,8 @@ namespace Envelop.Tests
             var items = enumerable.ToArray();
             Assert.AreEqual(2, items.Length);
 
-            Assert.That(items[0] is SomeInterfaceImplementation);
-            Assert.That(items[1] is SomeInterfaceImplementation2);
+            Assert.That(items.OfType<SomeInterfaceImplementation2>().Count() == 1);
+            Assert.That(items.OfType<SomeInterfaceImplementation>().Count() == 1);
         }
 
         [Test]
@@ -147,8 +184,8 @@ namespace Envelop.Tests
             var items = enumerable.ToArray();
             Assert.AreEqual(2, items.Length);
 
-            Assert.That(items[0] is SomeInterfaceImplementation);
-            Assert.That(items[1] is SomeInterfaceImplementation2);
+            Assert.That(items.OfType<SomeInterfaceImplementation2>().Count() == 1);
+            Assert.That(items.OfType<SomeInterfaceImplementation>().Count() == 1);
         }
     }
 }
