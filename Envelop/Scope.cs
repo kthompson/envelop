@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -47,7 +48,8 @@ namespace Envelop
 
             this._scopes.Clear();
 
-            foreach (var activation in this._activations)
+            // Deactivate in reverse order of activations
+            foreach (var activation in new Stack<IActivation>(this._activations))
                 activation.Deactivate();
 
             this._activations.Clear();

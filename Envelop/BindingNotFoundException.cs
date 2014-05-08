@@ -10,16 +10,17 @@ namespace Envelop
     public class BindingNotFoundException : InvalidOperationException
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BindingNotFoundException"/> class.
+        /// Initializes a new instance of the <see cref="BindingNotFoundException" /> class.
         /// </summary>
         /// <param name="request">The request.</param>
-        /// <param name="targetType"></param>
-        internal BindingNotFoundException(IRequest request, Type targetType = null)
-            : base(GetMessageForRequest(request, targetType))
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="message">The message.</param>
+        internal BindingNotFoundException(IRequest request, Type targetType = null, string message = null)
+            : base(GetMessageForRequest(request, targetType, message))
         {
         }
 
-        private static string GetMessageForRequest(IRequest request, Type targetType)
+        private static string GetMessageForRequest(IRequest request, Type targetType, string message)
         {
             var sb = new StringBuilder();
             var fullfillments = new List<Tuple<Type, Type>>();
@@ -41,6 +42,11 @@ namespace Envelop
                     sb.AppendFormat("Attempting to resolve '{0}' failed without finding a valid implementation", r.Item1.Name);
                     sb.AppendLine();
 
+                    if (!string.IsNullOrEmpty(message))
+                    {
+                        sb.AppendLine(message);
+                    }
+
                     return sb.ToString();
                 }
 
@@ -49,6 +55,13 @@ namespace Envelop
             }
 
             sb.AppendFormat("Failed to find a usable constructor for '{0}'", failedTarget.Name);
+
+
+            if (!string.IsNullOrEmpty(message))
+            {
+                sb.AppendLine(); 
+                sb.AppendLine(message);
+            }
 
             return sb.ToString();
         }

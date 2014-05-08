@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,7 +34,15 @@ namespace Envelop.Tests
             var kernel = Kernel.Create();
             //We dont define a binding for ISomeInterface which is required in the ctor of AnotherInterfaceImplementation
             kernel.Bind<IAnotherInterface>().To<AnotherInterfaceImplementation>();
-            kernel.Resolve<IAnotherInterface>();
+            try
+            {
+                kernel.Resolve<IAnotherInterface>();
+            }
+            catch (BindingNotFoundException exception)
+            {
+                Trace.Write(exception);
+                throw exception;
+            }
         }
     }
 }

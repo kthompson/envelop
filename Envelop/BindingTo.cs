@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace Envelop
 {
@@ -38,15 +39,23 @@ namespace Envelop
             _binding.Activator = req =>
             {
                 var resolver = req.Resolver;
+                var sb = new StringBuilder();
 
                 //Look through constructors to find a ctor we can activate
                 foreach (var item in cache)
                 {
                     // Create a request to see if we can resolve all parameters of this ctor
-                    var requests =
-                        item.Parameters.Select(p => CreateRequest(req, targetType, p.ParameterType)).ToArray();
-                    if (!requests.All(resolver.CanResolve))
+                    var requests = item.Parameters.Select(p => CreateRequest(req, targetType, p.ParameterType)).ToArray();
+                    sb.AppendLine("=============================================================");
+                    sb.AppendLine("Attempting to resolve parameters for: " + item.Constructor);
+                    var unresolved = requests.Where(r => !resolver.CanResolve(r)).ToArray();
+                    if (unresolved.Length > 0)
+                    {
+                        foreach (var u in unresolved)
+                            sb.AppendLine("   Unresolved service type: " + u.ServiceType.FullName);
+
                         continue;
+                    }
 
                     //Now lets resolve each parameter for this ctor
                     var args = requests.Select(request =>
@@ -70,7 +79,7 @@ namespace Envelop
                 }
 
                 // we couldnt find a ctor that we could activate
-                throw new BindingNotFoundException(req, targetType);
+                throw new BindingNotFoundException(req, targetType, sb.ToString());
             };
 
             return Constraints();
