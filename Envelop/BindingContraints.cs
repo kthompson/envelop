@@ -19,14 +19,31 @@ namespace Envelop
 
         public IBindingContraints AsSingleton()
         {
+            var objectLock = new object();
             var original = _binding.Activator;
             object instance = null;
+
             _binding.Activator = req =>
             {
-                if (Equals(instance, null))
-                    instance = original(req);
+                lock (objectLock)
+                {
+                    if (Equals(instance, null))
+                        instance = original(req);
 
-                return instance;
+                    return instance;
+                }
+            };
+
+            bool deactivated = false;
+            var oldDeactivator = _binding.Deactivator;
+            _binding.Deactivator = o =>
+            {
+                if (deactivated)
+                    return;
+
+                deactivated = true;
+                if (oldDeactivator != null)
+                    oldDeactivator(o);
             };
 
             return this;
@@ -34,14 +51,48 @@ namespace Envelop
 
         public IBindingContraints AfterDeactivation(Action<object> action)
         {
-            var save = _binding.Deactivator ?? (o => { });
+            if (_binding.Deactivator == null)
+            {
+                _binding.Deactivator = action;
+                return this;
+            }
 
+            var save = _binding.Deactivator;
             _binding.Deactivator = o =>
             {
                 save(o);
                 action(o);
             };
+            return this;
+        }
 
+        public IBindingContraints BeforeDeactivation(Action<object> action)
+        {
+            if (_binding.Deactivator == null)
+            {
+                _binding.Deactivator = action;
+                return this;
+            }
+
+            var save = _binding.Deactivator;
+            _binding.Deactivator = o =>
+            {
+                action(o);
+                save(o);
+            };
+            return this;
+        }
+
+        public IBindingContraints OnActivation(Action<object> action)
+        {
+            var save = _binding.Activator;
+            _binding.Activator = req =>
+            {
+                var result = save(req);
+                action(result);
+
+                return result;
+            };
             return this;
         }
     }

@@ -20,10 +20,24 @@ namespace Envelop
         IBindingContraints AsSingleton();
 
         /// <summary>
+        /// Performs the specified action before deactivation.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        /// <returns></returns>
+        IBindingContraints BeforeDeactivation(Action<object> action);
+
+        /// <summary>
         /// Performs the specified action after deactivation.
         /// </summary>
         /// <param name="action">The action.</param>
         /// <returns></returns>
         IBindingContraints AfterDeactivation(Action<object> action);
+
+        /// <summary>
+        /// Performs the specified action after deactivation.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        /// <returns></returns>
+        IBindingContraints OnActivation(Action<object> action);
     }
 }
