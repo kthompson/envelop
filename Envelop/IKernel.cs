@@ -9,11 +9,12 @@ namespace Envelop
     /// </summary>
     public interface IKernel : IBuilder, IResolver, IDisposable
     {
-        /// <summary>
-        /// Loads the modules at the specified file paths.
-        /// </summary>
-        /// <param name="filePaths">The file paths.</param>
-        void Load(params string[] filePaths);
+        ///// <summary>
+        ///// Loads the modules at the specified file paths.
+        ///// </summary>
+        ///// <param name="filePaths">The file paths.</param>
+        ////TODO: PCL void Load(params string[] filePaths);
+
         /// <summary>
         /// Loads modules from the specified assemblies.
         /// </summary>
@@ -31,10 +32,10 @@ namespace Envelop
         /// <returns>The scope.</returns>
         IScope CreateScope();
 
-        /// <summary>
-        /// Automatically registers all interfaces.
-        /// </summary>
-        void AutoRegister();
+        ///// <summary>
+        ///// Automatically registers all interfaces.
+        ///// </summary>
+        //TODO: PCL void AutoRegister();
 
         /// <summary>
         /// Automatically registers all interfaces.

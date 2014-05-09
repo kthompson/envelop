@@ -39,8 +39,9 @@ namespace Envelop
         public static IKernel Create(bool autoRegister = false)
         {
             var kernel = new Kernel();
-            if(autoRegister)
-                kernel.AutoRegister();
+            //TODO: PCL
+            // if(autoRegister)
+            //    kernel.AutoRegister();
 
             return kernel;
         }
@@ -50,14 +51,14 @@ namespace Envelop
         #region Automatic Registration
 
         private readonly object _registrationLock = new object();
-        /// <summary>
-        /// Automatically registers all interfaces and abstract classes.
-        /// </summary>
-        public void AutoRegister()
-        {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => !IsIgnoredAssembly(a));
-            AutoRegister(assemblies);
-        }
+        ///// <summary>
+        ///// Automatically registers all interfaces and abstract classes.
+        ///// </summary>
+        //public void AutoRegister()
+        //{
+        //    var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => !IsIgnoredAssembly(a));
+        //    AutoRegister(assemblies);
+        //}
 
         /// <summary>
         /// Automatically registers all interfaces and abstract classes.
@@ -128,27 +129,27 @@ namespace Envelop
 
         #region Load
 
-        /// <summary>
-        /// Loads the modules at the specified file paths.
-        /// </summary>
-        /// <param name="filePaths">The file paths.</param>
-        public void Load(params string[] filePaths)
-        {
-            foreach (var filePath in filePaths)
-            {
-                if (File.Exists(filePath))
-                {
-                    this.Load(Assembly.LoadFile(filePath));
-                }
-                else if (Directory.Exists(filePath))
-                {
-                    foreach (var file in Directory.EnumerateFiles(filePath, "*.dll"))
-                    {
-                        this.Load(Assembly.LoadFile(file));
-                    }
-                }
-            }
-        }
+        ///// <summary>
+        ///// Loads the modules at the specified file paths.
+        ///// </summary>
+        ///// <param name="filePaths">The file paths.</param>
+        //public void Load(params string[] filePaths)
+        //{
+        //    foreach (var filePath in filePaths)
+        //    {
+        //        if (File.Exists(filePath))
+        //        {
+        //            this.Load(Assembly.LoadFile(filePath));
+        //        }
+        //        else if (Directory.Exists(filePath))
+        //        {
+        //            foreach (var file in Directory.EnumerateFiles(filePath, "*.dll"))
+        //            {
+        //                this.Load(Assembly.LoadFile(file));
+        //            }
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Loads modules from the specified assemblies.
