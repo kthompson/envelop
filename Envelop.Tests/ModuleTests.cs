@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Envelop.Tests.TestDependencies;
-using NUnit.Framework;
+using Xunit;
 
 namespace Envelop.Tests
 {
-    [TestFixture]
     public class ModuleTests
     {
         class SimpleModuleTestModule : Module
@@ -31,7 +30,7 @@ namespace Envelop.Tests
             }
         }
 
-        [Test]
+        [Fact]
         public void SimpleModuleTest()
         {
             var kernel = Kernel.Create();
@@ -41,13 +40,13 @@ namespace Envelop.Tests
 
             Assert.NotNull(t1);
             Assert.NotNull(t1.SomeInterfaces);
-            Assert.AreEqual(2, t1.SomeInterfaces.Length);
+            Assert.Equal(2, t1.SomeInterfaces.Length);
             
-            Assert.That(t1.SomeInterfaces.OfType<SomeInterfaceImplementation2>().Count() == 1);
-            Assert.That(t1.SomeInterfaces.OfType<SomeInterfaceImplementation>().Count() == 1);
+            Assert.True(t1.SomeInterfaces.OfType<SomeInterfaceImplementation2>().Count() == 1);
+            Assert.True(t1.SomeInterfaces.OfType<SomeInterfaceImplementation>().Count() == 1);
         }
 
-        [Test]
+        [Fact]
         public void SimpleModuleTest2()
         {
             var kernel = Kernel.Create();
@@ -57,11 +56,11 @@ namespace Envelop.Tests
 
             Assert.NotNull(t1);
             Assert.NotNull(t1.SomeInterfaces);
-            Assert.AreEqual(1, t1.SomeInterfaces.Length);
-            Assert.That(t1.SomeInterfaces[0] is SomeInterfaceImplementation);
+            Assert.Equal(1, t1.SomeInterfaces.Length);
+            Assert.True(t1.SomeInterfaces[0] is SomeInterfaceImplementation);
         }
 
-        [Test]
+        [Fact]
         public void SimpleModuleTest3()
         {
             var kernel = Kernel.Create();
@@ -72,7 +71,7 @@ namespace Envelop.Tests
             Assert.NotNull(t1);
         }
 
-        [Test]
+        [Fact]
         public void SimpleAssemblyModuleTest()
         {
             var kernel = Kernel.Create();
@@ -82,26 +81,26 @@ namespace Envelop.Tests
 
             Assert.NotNull(t1);
             Assert.NotNull(t1.SomeInterfaces);
-            Assert.AreEqual(3, t1.SomeInterfaces.Length);
-            Assert.That(t1.SomeInterfaces[0] is SomeInterfaceImplementation);
-            Assert.That(t1.SomeInterfaces[1] is SomeInterfaceImplementation2);
-            Assert.That(t1.SomeInterfaces[2] is SomeInterfaceImplementation);
+            Assert.Equal(3, t1.SomeInterfaces.Length);
+            Assert.True(t1.SomeInterfaces[0] is SomeInterfaceImplementation);
+            Assert.True(t1.SomeInterfaces[1] is SomeInterfaceImplementation2);
+            Assert.True(t1.SomeInterfaces[2] is SomeInterfaceImplementation);
         }
 
-        [Test]
+        [Fact(Skip = "Removed feature for now for PCL support.")]
         public void SimpleAssemblyFileModuleTest()
         {
             var kernel = Kernel.Create();
-            kernel.Load(typeof(SimpleModuleTestModule).Assembly.Location);
+            //kernel.Load(typeof(SimpleModuleTestModule).Assembly.Location);
 
             var t1 = kernel.Resolve<IMultiInterface>();
 
             Assert.NotNull(t1);
             Assert.NotNull(t1.SomeInterfaces);
-            Assert.AreEqual(3, t1.SomeInterfaces.Length);
-            Assert.That(t1.SomeInterfaces[0] is SomeInterfaceImplementation);
-            Assert.That(t1.SomeInterfaces[1] is SomeInterfaceImplementation2);
-            Assert.That(t1.SomeInterfaces[2] is SomeInterfaceImplementation);
+            Assert.Equal(3, t1.SomeInterfaces.Length);
+            Assert.True(t1.SomeInterfaces[0] is SomeInterfaceImplementation);
+            Assert.True(t1.SomeInterfaces[1] is SomeInterfaceImplementation2);
+            Assert.True(t1.SomeInterfaces[2] is SomeInterfaceImplementation);
         }
     }
 }

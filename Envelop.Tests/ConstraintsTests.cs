@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Envelop.Tests.TestDependencies;
-using NUnit.Framework;
+using Xunit;
 
 namespace Envelop.Tests
 {
-    [TestFixture]
     public class ConstraintsTests
     {
-        [Test]
+        [Fact]
         public void BindToWhen()
         {
             var kernel = Kernel.Create();
@@ -25,12 +24,12 @@ namespace Envelop.Tests
             Assert.NotNull(t1);
             Assert.NotNull(t2);
 
-            Assert.That(t1 is SomeInterfaceImplementation);
-            Assert.That(t2.SomeInterface is SomeInterfaceImplementation2);
+            Assert.True(t1 is SomeInterfaceImplementation);
+            Assert.True(t2.SomeInterface is SomeInterfaceImplementation2);
         }
-        
 
-        [Test]
+
+        [Fact]
         public void BindInterfaceToClassAsSingleton()
         {
             var kernel = Kernel.Create();
@@ -44,11 +43,11 @@ namespace Envelop.Tests
             Assert.NotNull(t2);
             Assert.NotNull(t3);
 
-            Assert.AreSame(t1, t2);
-            Assert.AreSame(t2, t3);
+            Assert.Same(t1, t2);
+            Assert.Same(t2, t3);
         }
 
-        [Test]
+        [Fact]
         public void BindInterfaceToBuilderAsSingleton()
         {
             var kernel = Kernel.Create();
@@ -62,11 +61,11 @@ namespace Envelop.Tests
             Assert.NotNull(t2);
             Assert.NotNull(t3);
 
-            Assert.AreSame(t1, t2);
-            Assert.AreSame(t2, t3);
+            Assert.Same(t1, t2);
+            Assert.Same(t2, t3);
         }
 
-        [Test]
+        [Fact]
         public void BindInterfaceToBuilderWithDeactivation()
         {
             var value = false;
@@ -81,10 +80,10 @@ namespace Envelop.Tests
                 var t1 = kernel.Resolve<ISomeInterface>();
 
                 Assert.NotNull(t1);
-                Assert.IsFalse(value);
+                Assert.False(value);
             }
 
-            Assert.IsTrue(value);
+            Assert.True(value);
         }
     }
 }

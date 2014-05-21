@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Envelop.Tests.TestDependencies;
-using NUnit.Framework;
+using Xunit;
 
 namespace Envelop.Tests
 {
-    [TestFixture]
     public class InjectionTests
     {
-        [Test]
+        [Fact]
         public void InjectionTest()
         {
             var kernel = Kernel.Create();
@@ -24,7 +23,7 @@ namespace Envelop.Tests
             Assert.NotNull(t1.SomeInterface);
         }
 
-        [Test]
+        [Fact]
         public void MultiInjectionArrayTest()
         {
             var kernel = Kernel.Create();
@@ -36,13 +35,13 @@ namespace Envelop.Tests
 
             Assert.NotNull(t1);
             Assert.NotNull(t1.SomeInterfaces);
-            Assert.AreEqual(2, t1.SomeInterfaces.Length);
+            Assert.Equal(2, t1.SomeInterfaces.Length);
 
-            Assert.That(t1.SomeInterfaces.OfType<SomeInterfaceImplementation2>().Count() == 1);
-            Assert.That(t1.SomeInterfaces.OfType<SomeInterfaceImplementation>().Count() == 1);
+            Assert.True(t1.SomeInterfaces.OfType<SomeInterfaceImplementation2>().Count() == 1);
+            Assert.True(t1.SomeInterfaces.OfType<SomeInterfaceImplementation>().Count() == 1);
         }
 
-        [Test]
+        [Fact]
         public void MultiInjectionIEnumerableTest()
         {
             var kernel = Kernel.Create();
@@ -54,12 +53,12 @@ namespace Envelop.Tests
 
             Assert.NotNull(t1);
             Assert.NotNull(t1.SomeInterfaces);
-            Assert.AreEqual(2, t1.SomeInterfaces.Length);
-            Assert.That(t1.SomeInterfaces.OfType<SomeInterfaceImplementation2>().Count() == 1);
-            Assert.That(t1.SomeInterfaces.OfType<SomeInterfaceImplementation>().Count() == 1);
+            Assert.Equal(2, t1.SomeInterfaces.Length);
+            Assert.True(t1.SomeInterfaces.OfType<SomeInterfaceImplementation2>().Count() == 1);
+            Assert.True(t1.SomeInterfaces.OfType<SomeInterfaceImplementation>().Count() == 1);
         }
 
-        [Test]
+        [Fact]
         public void MultiInjectionListTest()
         {
             var kernel = Kernel.Create();
@@ -71,10 +70,10 @@ namespace Envelop.Tests
 
             Assert.NotNull(t1);
             Assert.NotNull(t1.SomeInterfaces);
-            Assert.AreEqual(2, t1.SomeInterfaces.Length);
+            Assert.Equal(2, t1.SomeInterfaces.Length);
 
-            Assert.That(t1.SomeInterfaces.OfType<SomeInterfaceImplementation2>().Count() == 1);
-            Assert.That(t1.SomeInterfaces.OfType<SomeInterfaceImplementation>().Count() == 1);
+            Assert.True(t1.SomeInterfaces.OfType<SomeInterfaceImplementation2>().Count() == 1);
+            Assert.True(t1.SomeInterfaces.OfType<SomeInterfaceImplementation>().Count() == 1);
         }
     }
 }

@@ -5,44 +5,37 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Envelop.Tests.TestDependencies;
-using NUnit.Framework;
+using Xunit;
 
 namespace Envelop.Tests
 {
-    [TestFixture]
     class ExceptionsTests
     {
-        [Test, ExpectedException(typeof(IncompleteBindingException))]
+        [Fact]
         public void IncompleteBindingException()
         {
             var kernel = Kernel.Create();
             kernel.Bind<ISomeInterface>();
 
-            kernel.Resolve<ISomeInterface>();
+            Assert.Throws<IncompleteBindingException>(() => kernel.Resolve<ISomeInterface>());
         }
 
-        [Test, ExpectedException(typeof(BindingNotFoundException))]
+        [Fact]
         public void BindingNotFoundException()
         {
             var kernel = Kernel.Create();
-            kernel.Resolve<ISomeInterface>();
+
+            Assert.Throws<BindingNotFoundException>(() => kernel.Resolve<ISomeInterface>());
         }
 
-        [Test, ExpectedException(typeof(BindingNotFoundException))]
+        [Fact]
         public void BindingNotFoundDueToNoValidConstructor()
         {
             var kernel = Kernel.Create();
             //We dont define a binding for ISomeInterface which is required in the ctor of AnotherInterfaceImplementation
             kernel.Bind<IAnotherInterface>().To<AnotherInterfaceImplementation>();
-            try
-            {
-                kernel.Resolve<IAnotherInterface>();
-            }
-            catch (BindingNotFoundException exception)
-            {
-                Trace.Write(exception);
-                throw exception;
-            }
+
+            Assert.Throws<BindingNotFoundException>(() => kernel.Resolve<IAnotherInterface>());
         }
     }
 }

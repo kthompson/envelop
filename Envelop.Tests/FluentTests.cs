@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Envelop.Tests.TestDependencies;
-using NUnit.Framework;
+using Xunit;
 
 namespace Envelop.Tests
 {
-    [TestFixture]
     public class FluentTests
     {
-        [Test]
+        [Fact]
         public void NewBindShouldOverrideExistingBind()
         {
             var kernel = Kernel.Create();
@@ -23,10 +22,10 @@ namespace Envelop.Tests
             Assert.NotNull(t1);
             Assert.NotNull(t2);
 
-            Assert.AreNotSame(t1, t2);
+            Assert.NotSame(t1, t2);
 
-            Assert.That(t1 is SomeInterfaceImplementation);
-            Assert.That(t2 is SomeInterfaceImplementation);
+            Assert.True(t1 is SomeInterfaceImplementation);
+            Assert.True(t2 is SomeInterfaceImplementation);
 
             //override existing bind
             kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>().AsSingleton();
@@ -37,18 +36,18 @@ namespace Envelop.Tests
             Assert.NotNull(t3); 
             Assert.NotNull(t4);
 
-            Assert.AreNotSame(t1, t3);
-            Assert.AreNotSame(t1, t4);
-            Assert.AreNotSame(t2, t3);
-            Assert.AreNotSame(t2, t4);
+            Assert.NotSame(t1, t3);
+            Assert.NotSame(t1, t4);
+            Assert.NotSame(t2, t3);
+            Assert.NotSame(t2, t4);
 
-            Assert.That(t3 is SomeInterfaceImplementation);
-            Assert.That(t4 is SomeInterfaceImplementation);
+            Assert.True(t3 is SomeInterfaceImplementation);
+            Assert.True(t4 is SomeInterfaceImplementation);
 
-            Assert.AreSame(t3, t4);
+            Assert.Same(t3, t4);
         }
 
-        [Test]
+        [Fact]
         public void BindInterfaceToClass()
         {
             var kernel = Kernel.Create();
@@ -62,16 +61,16 @@ namespace Envelop.Tests
             Assert.NotNull(t2);
             Assert.NotNull(t3);
 
-            Assert.AreNotSame(t1, t2);
-            Assert.AreNotSame(t2, t3);
-            Assert.AreNotSame(t1, t3);
+            Assert.NotSame(t1, t2);
+            Assert.NotSame(t2, t3);
+            Assert.NotSame(t1, t3);
 
-            Assert.That(t1 is SomeInterfaceImplementation);
-            Assert.That(t2 is SomeInterfaceImplementation);
-            Assert.That(t3 is SomeInterfaceImplementation);
+            Assert.True(t1 is SomeInterfaceImplementation);
+            Assert.True(t2 is SomeInterfaceImplementation);
+            Assert.True(t3 is SomeInterfaceImplementation);
         }
 
-        [Test]
+        [Fact]
         public void ResolveCanUseTypeParameter()
         {
             var kernel = Kernel.Create();
@@ -80,10 +79,10 @@ namespace Envelop.Tests
             var t1 = kernel.Resolve(typeof(ISomeInterface));
 
             Assert.NotNull(t1);
-            Assert.That(t1 is SomeInterfaceImplementation);
+            Assert.True(t1 is SomeInterfaceImplementation);
         }
 
-        [Test]
+        [Fact]
         public void ResolveCanUseType()
         {
             var kernel = Kernel.Create();
@@ -92,10 +91,10 @@ namespace Envelop.Tests
             var t1 = kernel.Resolve(typeof(ISomeInterface));
 
             Assert.NotNull(t1);
-            Assert.That(t1 is SomeInterfaceImplementation);
+            Assert.True(t1 is SomeInterfaceImplementation);
         }
 
-        [Test]
+        [Fact]
         public void BindInterfaceToBuilder()
         {
             var kernel = Kernel.Create();
@@ -109,15 +108,15 @@ namespace Envelop.Tests
             Assert.NotNull(t2);
             Assert.NotNull(t3);
 
-            Assert.AreNotSame(t1, t2);
-            Assert.AreNotSame(t2, t3);
+            Assert.NotSame(t1, t2);
+            Assert.NotSame(t2, t3);
 
-            Assert.That(t1 is SomeInterfaceImplementation);
-            Assert.That(t2 is SomeInterfaceImplementation);
-            Assert.That(t3 is SomeInterfaceImplementation);
+            Assert.True(t1 is SomeInterfaceImplementation);
+            Assert.True(t2 is SomeInterfaceImplementation);
+            Assert.True(t3 is SomeInterfaceImplementation);
         }
 
-        [Test]
+        [Fact]
         public void BindInterfaceToInstance()
         {
             var kernel = Kernel.Create();
@@ -131,15 +130,15 @@ namespace Envelop.Tests
             Assert.NotNull(t2);
             Assert.NotNull(t3);
 
-            Assert.AreSame(t1, t2);
-            Assert.AreSame(t2, t3);
+            Assert.Same(t1, t2);
+            Assert.Same(t2, t3);
 
-            Assert.That(t1 is SomeInterfaceImplementation);
-            Assert.That(t2 is SomeInterfaceImplementation);
-            Assert.That(t3 is SomeInterfaceImplementation);
+            Assert.True(t1 is SomeInterfaceImplementation);
+            Assert.True(t2 is SomeInterfaceImplementation);
+            Assert.True(t3 is SomeInterfaceImplementation);
         }
 
-        [Test]
+        [Fact]
         public void ResolveAllWithGenericTypeParameter()
         {
             var kernel = Kernel.Create();
@@ -150,13 +149,13 @@ namespace Envelop.Tests
             Assert.NotNull(enumerable);
 
             var items = enumerable.ToArray();
-            Assert.AreEqual(2, items.Length);
+            Assert.Equal(2, items.Length);
 
-            Assert.That(items.OfType<SomeInterfaceImplementation2>().Count() == 1);
-            Assert.That(items.OfType<SomeInterfaceImplementation>().Count() == 1);
+            Assert.True(items.OfType<SomeInterfaceImplementation2>().Count() == 1);
+            Assert.True(items.OfType<SomeInterfaceImplementation>().Count() == 1);
         }
 
-        [Test]
+        [Fact]
         public void ResolveAllWithTypeParameter()
         {
             var kernel = Kernel.Create();
@@ -167,13 +166,13 @@ namespace Envelop.Tests
             Assert.NotNull(enumerable);
 
             var items = enumerable.ToArray();
-            Assert.AreEqual(2, items.Length);
+            Assert.Equal(2, items.Length);
 
-            Assert.That(items.OfType<SomeInterfaceImplementation2>().Count() == 1);
-            Assert.That(items.OfType<SomeInterfaceImplementation>().Count() == 1);
+            Assert.True(items.OfType<SomeInterfaceImplementation2>().Count() == 1);
+            Assert.True(items.OfType<SomeInterfaceImplementation>().Count() == 1);
         }
 
-        [Test]
+        [Fact]
         public void AutoRegisterBindsServices()
         {
             var kernel = Kernel.Create(true);
@@ -182,10 +181,10 @@ namespace Envelop.Tests
             Assert.NotNull(enumerable);
 
             var items = enumerable.ToArray();
-            Assert.AreEqual(2, items.Length);
+            Assert.Equal(2, items.Length);
 
-            Assert.That(items.OfType<SomeInterfaceImplementation2>().Count() == 1);
-            Assert.That(items.OfType<SomeInterfaceImplementation>().Count() == 1);
+            Assert.True(items.OfType<SomeInterfaceImplementation2>().Count() == 1);
+            Assert.True(items.OfType<SomeInterfaceImplementation>().Count() == 1);
         }
     }
 }

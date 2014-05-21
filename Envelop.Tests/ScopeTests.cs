@@ -1,13 +1,12 @@
 ﻿using System;
-using NUnit.Framework;
 using Envelop.Tests.TestDependencies;
+using Xunit;
 
 namespace Envelop.Tests
 {
-    [TestFixture]
     public class ScopeTests
     {
-        [Test]
+        [Fact]
         public void DeactivationTests ()
         {
             var kernel = Kernel.Create ();
@@ -23,7 +22,7 @@ namespace Envelop.Tests
             Assert.True (disposable.IsDisposed);
         }
 
-        [Test]
+        [Fact]
         public void ScopedDeactivationTests ()
         {
             var kernel = Kernel.Create ();
@@ -35,25 +34,25 @@ namespace Envelop.Tests
                 kernel.Bind<IIsDisposable> ().To<IsDisposable> ();
 
                 disposable = kernel.Resolve<IIsDisposable> ();
-                Assert.IsNotNull (disposable);
-                Assert.IsFalse (disposable.IsDisposed);
+                Assert.NotNull (disposable);
+                Assert.False (disposable.IsDisposed);
 
                 using (var scope = kernel.CreateScope ()) 
                 {
                     scopedDisposable = scope.Resolve<IIsDisposable> ();
 
-                    Assert.IsNotNull (scopedDisposable);
-                    Assert.IsFalse (scopedDisposable.IsDisposed);
+                    Assert.NotNull (scopedDisposable);
+                    Assert.False (scopedDisposable.IsDisposed);
                 }
 
-                Assert.IsTrue (scopedDisposable.IsDisposed);
-                Assert.IsFalse (disposable.IsDisposed);
+                Assert.True (scopedDisposable.IsDisposed);
+                Assert.False (disposable.IsDisposed);
             }
 
-            Assert.IsTrue (disposable.IsDisposed);
+            Assert.True (disposable.IsDisposed);
         }
 
-        [Test]
+        [Fact]
         public void ScopedDeactivationTests2 ()
         {
             var disposed = 0;
@@ -67,21 +66,21 @@ namespace Envelop.Tests
 
                 rootObject = kernel.Resolve<ISomeInterface> ();
 
-                Assert.IsNotNull (rootObject);
-                Assert.AreEqual (0, disposed);
+                Assert.NotNull (rootObject);
+                Assert.Equal (0, disposed);
 
                 using (var scope = kernel.CreateScope ()) 
                 {
                     scopedObject = scope.Resolve<ISomeInterface> ();
 
-                    Assert.IsNotNull (scopedObject);
-                    Assert.AreEqual (0, disposed);
+                    Assert.NotNull (scopedObject);
+                    Assert.Equal (0, disposed);
                 }
 
-                Assert.AreEqual (1, disposed);
+                Assert.Equal (1, disposed);
             }
 
-            Assert.AreEqual (2, disposed);
+            Assert.Equal (2, disposed);
         }
     }
 }

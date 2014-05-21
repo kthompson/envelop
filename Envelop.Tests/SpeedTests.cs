@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Envelop.Tests.TestDependencies;
-using NUnit.Framework;
+using Xunit;
 
 namespace Envelop.Tests
 {
-    [TestFixture]
     public class SpeedTests
     {
-        [Test]
+        [Fact]
         public void InjectionSpeed()
         {
             var kernel = Kernel.Create();

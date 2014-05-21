@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Envelop.Tests.TestDependencies;
-using NUnit.Framework;
+using Xunit;
 
 namespace Envelop.Tests
 {
-    [TestFixture]
     public class FactoryMethodTests
     {
-        [Test]
+        [Fact]
         public void ResolveUsingAParameterizedFactoryMethodWithOneParam()
         {
             var kernel = Kernel.Create();
@@ -23,10 +22,10 @@ namespace Envelop.Tests
 
             Assert.NotNull(t1);
 
-            Assert.AreEqual(t1.Value1, 25);
+            Assert.Equal(t1.Value1, 25);
         }
 
-        [Test]
+        [Fact]
         public void ResolveUsingAParameterizedFactoryMethodWithTwoParams()
         {
             var kernel = Kernel.Create();
@@ -43,11 +42,11 @@ namespace Envelop.Tests
 
             Assert.NotNull(t1);
 
-            Assert.AreEqual(t1.Value1, 25);
-            Assert.AreEqual(t1.Value2, 21);
+            Assert.Equal(t1.Value1, 25);
+            Assert.Equal(t1.Value2, 21);
         }
 
-        [Test]
+        [Fact]
         public void ResolveUsingAParameterizedFactoryMethodWith3Params()
         {
             var kernel = Kernel.Create();
@@ -66,9 +65,9 @@ namespace Envelop.Tests
 
             Assert.NotNull(t1);
 
-            Assert.AreEqual(t1.Value1, 25);
-            Assert.AreEqual(t1.Value2, 21);
-            Assert.AreEqual(t1.Value3, 21.5f);
+            Assert.Equal(t1.Value1, 25);
+            Assert.Equal(t1.Value2, 21);
+            Assert.Equal(t1.Value3, 21.5f);
         }
     }
 }
