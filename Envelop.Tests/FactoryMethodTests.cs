@@ -69,5 +69,55 @@ namespace Envelop.Tests
             Assert.Equal(t1.Value2, 21);
             Assert.Equal(t1.Value3, 21.5f);
         }
+
+        [Fact]
+        public void CanInjectFactoryMethod()
+        {
+            //Given
+            var kernel = Kernel.Create();
+            var x = 0;
+            kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>(_ => new SomeInterfaceImplementation(x++));
+            kernel.Bind<SomeInterfaceFactory>().To<SomeInterfaceFactory>();
+
+            
+            //When
+            var sif = kernel.Resolve<SomeInterfaceFactory>();
+            var si = sif.GetSomeInterface();
+
+            //Then
+            Assert.NotNull(sif);
+            Assert.NotNull(si);
+            Assert.Equal(0, si.Value1);
+
+            //When
+            var si2 = sif.GetSomeInterface();
+
+            //Then
+            Assert.NotNull(si2);
+            Assert.Equal(1, si2.Value1);
+            Assert.Equal(0, si.Value1);
+
+        }
+
+        [Fact]
+        public void CanInjectLazyFactory()
+        {
+            //Given
+            var kernel = Kernel.Create();
+            var x = 0;
+            kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>(_ => new SomeInterfaceImplementation(x++));
+            kernel.Bind<SomeInterfaceLazy>().To<SomeInterfaceLazy>();
+
+
+            //When
+            var sif = kernel.Resolve<SomeInterfaceLazy>();
+
+            //Then
+            Assert.NotNull(sif);
+            Assert.False(sif.Lazy.IsValueCreated);
+            var si = sif.GetSomeInterface();
+            Assert.NotNull(si);
+            Assert.Equal(0, si.Value1);
+        }
     }
 }

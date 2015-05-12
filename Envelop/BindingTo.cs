@@ -2,11 +2,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
 namespace Envelop
 {
+    class CallSites
+    {
+
+        public static readonly Type Func = typeof (Func<>);
+        public static readonly Type Resolver = typeof(IResolver);
+        public static readonly Type List = typeof(List<>);
+        public static readonly Type IEnumerable = typeof(IEnumerable<>);
+        public static readonly Type Lazy = typeof(Lazy<>);
+
+
+        public static readonly MethodInfo ResolverResolveRequest = Resolver.GetMethod("Resolve", new[] { typeof(IRequest) });
+    }
+
     class BindingTo : IBindingTo
     {
         private readonly IBinding _binding;
@@ -60,16 +74,22 @@ namespace Envelop
                     //Now lets resolve each parameter for this ctor
                     var args = requests.Select(request =>
                     {
-                        if (request.MultiInjection == MultiInjection.None)
+                        if (request.InjectionMode == InjectionMode.None)
                             return resolver.Resolve(request);
+
+                        if (request.InjectionMode == InjectionMode.Factory)
+                            return CreateFactory(resolver, request);
+
+                        if (request.InjectionMode == InjectionMode.Lazy)
+                            return CreateLazy(resolver, request);
 
                         var enumerable = resolver.ResolveAll(request).ToArray();
 
-                        if (request.MultiInjection == MultiInjection.List)
+                        if (request.InjectionMode == InjectionMode.List)
                             return CreateList(enumerable, request.ServiceType);
 
-                        if (request.MultiInjection == MultiInjection.Enumerable ||
-                            request.MultiInjection == MultiInjection.Array)
+                        if (request.InjectionMode == InjectionMode.Enumerable ||
+                            request.InjectionMode == InjectionMode.Array)
                             return CreateArray(enumerable, request.ServiceType);
 
                         throw new ActivationFailedException();
@@ -83,6 +103,27 @@ namespace Envelop
             };
 
             return Constraints();
+        }
+
+        private object CreateFactory(IResolver resolver, IRequest request)
+        {
+            var type = CallSites.Func.MakeGenericType(request.ServiceType);
+
+            var resolverExpr = Expression.Constant(resolver, CallSites.Resolver);
+            var requestExpr = Expression.Constant(request);
+            var resolveCallExpr = Expression.Call(resolverExpr, CallSites.ResolverResolveRequest, requestExpr);
+            var castExpr = Expression.Convert(resolveCallExpr, request.ServiceType);
+            var lambda = Expression.Lambda(type, castExpr);
+
+            return lambda.Compile();
+        }
+
+        private object CreateLazy(IResolver resolver, IRequest request)
+        {
+            var fact = CreateFactory(resolver, request);
+            var lazyType = CallSites.Lazy.MakeGenericType(request.ServiceType);
+            var lazy = Activator.CreateInstance(lazyType, fact);
+            return lazy;
         }
 
         private static object CreateArray(object[] enumerable, Type serviceType)
@@ -104,26 +145,35 @@ namespace Envelop
 
         private Request CreateRequest(IRequest req, Type targetType, Type serviceType)
         {
-            //TODO: detect array multi-injection on the request
-            var mi = MultiInjection.None;
+            var mi = InjectionMode.None;
 
             if (serviceType.IsGenericType)
             {
                 var genericTypeDefinition = serviceType.GetGenericTypeDefinition();
-                if (genericTypeDefinition == typeof (IEnumerable<>))
+                if (genericTypeDefinition == CallSites.IEnumerable)
                 {
-                    mi = MultiInjection.Enumerable;
+                    mi = InjectionMode.Enumerable;
                     serviceType = serviceType.GetGenericArguments()[0];
                 }
-                else if (genericTypeDefinition == typeof(List<>))
+                else if (genericTypeDefinition == CallSites.List)
                 {
-                    mi = MultiInjection.List;
+                    mi = InjectionMode.List;
+                    serviceType = serviceType.GetGenericArguments()[0];
+                }
+                else if (genericTypeDefinition == CallSites.Func)
+                {
+                    mi = InjectionMode.Factory;
+                    serviceType = serviceType.GetGenericArguments()[0];
+                }
+                else if (genericTypeDefinition == CallSites.Lazy)
+                {
+                    mi = InjectionMode.Lazy;
                     serviceType = serviceType.GetGenericArguments()[0];
                 }
             }
             else if (serviceType.IsArray)
             {
-                mi = MultiInjection.Array;
+                mi = InjectionMode.Array;
                 serviceType = serviceType.GetElementType();
             }
 
@@ -133,7 +183,7 @@ namespace Envelop
                 ServiceType = serviceType, 
                 Resolver = req.Resolver, 
                 Target = targetType, 
-                MultiInjection = mi,
+                InjectionMode = mi,
                 CurrentScope = req.CurrentScope
             };
         }

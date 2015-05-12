@@ -45,19 +45,19 @@ namespace Envelop
         /// <value>
         /// The multi injection.
         /// </value>
-        MultiInjection MultiInjection { get; }
+        InjectionMode InjectionMode { get; }
 
-		/// <summary>
-		/// Gets the current scope of the request.
-		/// </summary>
-		/// <value>The current scope.</value>
-		IScope CurrentScope { get; }
+        /// <summary>
+        /// Gets the current scope of the request.
+        /// </summary>
+        /// <value>The current scope.</value>
+        IScope CurrentScope { get; }
     }
 
     /// <summary>
     /// An enum to indicate multi-injection if any
     /// </summary>
-    public enum MultiInjection
+    public enum InjectionMode
     {
         /// <summary>
         /// No multi-injection
@@ -74,16 +74,26 @@ namespace Envelop
         /// <summary>
         /// List based multi-injection
         /// </summary>
-        List
+        List,
+        /// <summary>
+        /// Return a factory method
+        /// </summary>
+        Factory,
+
+
+        /// <summary>
+        /// Return a Lazy&lt;T&gt;
+        /// </summary>
+        Lazy
     }
 
-	class Request : IRequest
+    class Request : IRequest
     {
         public IResolver Resolver { get; set; }
         public Type ServiceType { get; set; }
         public Type Target { get; set; }
         public IRequest ParentRequest { get; set; }
-        public MultiInjection MultiInjection { get; set; }
-		public IScope CurrentScope { get; set; }
+        public InjectionMode InjectionMode { get; set; }
+        public IScope CurrentScope { get; set; }
     }
 }

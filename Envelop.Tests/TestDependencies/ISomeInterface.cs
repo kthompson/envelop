@@ -56,6 +56,36 @@ namespace Envelop.Tests.TestDependencies
             this.SomeInterface = someInterface;
         }
     }
+
+    class SomeInterfaceFactory
+    {
+        private readonly Func<ISomeInterface> _factory;
+
+        public ISomeInterface GetSomeInterface()
+        {
+            return _factory();
+        }
+
+        public SomeInterfaceFactory(Func<ISomeInterface> factory)
+        {
+            _factory = factory;
+        }
+    }
+
+    class SomeInterfaceLazy
+    {
+        public Lazy<ISomeInterface> Lazy { get; private set; }
+
+        public ISomeInterface GetSomeInterface()
+        {
+            return this.Lazy.Value;
+        }
+
+        public SomeInterfaceLazy(Lazy<ISomeInterface> factory)
+        {
+            this.Lazy = factory;
+        }
+    }
     
     interface IMultiInterface
     {
