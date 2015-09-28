@@ -1,29 +1,43 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Envelop
 {
     class DefaultBindingResolver : IBindingResolver
     {
-        private readonly List<IBinding> _bindings;
+        private readonly Dictionary<Type, List<IBinding>> _bindings;
 
         public DefaultBindingResolver()
         {
-            this._bindings = new List<IBinding>();
+            this._bindings = new Dictionary<Type, List<IBinding>>();
         }
 
         public void AddBinding(IBinding binding)
         {
             // always put bindings at the beginning so most recent bindings will be returned first
-            this._bindings.Insert(0, binding);
+            List<IBinding> bindings;
+            if (_bindings.TryGetValue(binding.ServiceType, out bindings))
+            {
+                bindings.Insert(0, binding);
+            }
+            else
+            {
+                _bindings[binding.ServiceType] = new List<IBinding> {binding};
+            }
         }
 
         public IEnumerable<IBinding> Resolve(IRequest request)
         {
-            return from binding in this._bindings
-                   where binding.ServiceType == request.ServiceType
-                   where binding.Constraints.All(c => c.IsMatch(request))
-                   select binding;
+            List<IBinding> bindings;
+            if (_bindings.TryGetValue(request.ServiceType, out bindings))
+            {
+                return from binding in bindings
+                    where binding.Constraints.All(c => c.IsMatch(request))
+                    select binding;
+            }
+
+            return Enumerable.Empty<IBinding>();
         }
     }
 }
