@@ -101,7 +101,7 @@ namespace Envelop
             return types.Where(t => (t.IsAbstract || t.IsInterface) && !t.IsGenericTypeDefinition && t != this.GetType());
         }
 
-        static Type[] GetTypes(Assembly assembly)
+        private static Type[] GetTypes(Assembly assembly)
         {
             Type[] assemblies;
 
@@ -111,14 +111,14 @@ namespace Envelop
             }
             catch (System.IO.FileNotFoundException)
             {
-                assemblies = new Type[] { };
+                assemblies = new Type[] {};
             }
             catch (NotSupportedException)
             {
-                assemblies = new Type[] { };
+                assemblies = new Type[] {};
             }
             catch (ReflectionTypeLoadException e)
-        {
+            {
                 assemblies = e.Types.Where(t => t != null).ToArray();
             }
 
