@@ -74,23 +74,28 @@ namespace Envelop
                     //Now lets resolve each parameter for this ctor
                     var args = requests.Select(request =>
                     {
-                        if (request.InjectionMode == InjectionMode.None)
-                            return resolver.Resolve(request);
-
-                        if (request.InjectionMode == InjectionMode.Factory)
-                            return CreateFactory(resolver, request);
-
-                        if (request.InjectionMode == InjectionMode.Lazy)
-                            return CreateLazy(resolver, request);
+                        switch (request.InjectionMode)
+                        {
+                            case InjectionMode.None:
+                                return resolver.Resolve(request);
+                            case InjectionMode.Factory:
+                                return CreateFactory(resolver, request);
+                            case InjectionMode.Lazy:
+                                return CreateLazy(resolver, request);
+                            case InjectionMode.Generic:
+                                return CreateGeneric(resolver, request);
+                        }
 
                         var enumerable = resolver.ResolveAll(request).ToArray();
 
-                        if (request.InjectionMode == InjectionMode.List)
-                            return CreateList(enumerable, request.ServiceType);
-
-                        if (request.InjectionMode == InjectionMode.Enumerable ||
-                            request.InjectionMode == InjectionMode.Array)
-                            return CreateArray(enumerable, request.ServiceType);
+                        switch (request.InjectionMode)
+                        {
+                            case InjectionMode.List:
+                                return CreateList(enumerable, request.ServiceType);
+                            case InjectionMode.Enumerable:
+                            case InjectionMode.Array:
+                                return CreateArray(enumerable, request.ServiceType);
+                        }
 
                         throw new ActivationFailedException();
                     });
@@ -103,6 +108,15 @@ namespace Envelop
             };
 
             return Constraints();
+        }
+
+        private object CreateGeneric(IResolver resolver, Request request)
+        {
+            //resolver.Resolve(request.ServiceType)
+            // 1. we need to first determine the target concrete type
+            // 2. fill the concrete generic type with the proper type parameters based on the interface type parameters(which could have a different order)
+            // 
+            return null;
         }
 
         private object CreateFactory(IResolver resolver, IRequest request)
@@ -145,6 +159,7 @@ namespace Envelop
 
         private Request CreateRequest(IRequest req, Type targetType, Type serviceType)
         {
+            var genericTypeArguments = new Type[0];
             var mi = InjectionMode.None;
 
             if (serviceType.IsGenericType)
@@ -154,21 +169,31 @@ namespace Envelop
                 {
                     mi = InjectionMode.Enumerable;
                     serviceType = serviceType.GetGenericArguments()[0];
+                    genericTypeArguments = serviceType.GetGenericArguments();
                 }
                 else if (genericTypeDefinition == CallSites.List)
                 {
                     mi = InjectionMode.List;
                     serviceType = serviceType.GetGenericArguments()[0];
+                    genericTypeArguments = serviceType.GetGenericArguments();
                 }
                 else if (genericTypeDefinition == CallSites.Func)
                 {
                     mi = InjectionMode.Factory;
                     serviceType = serviceType.GetGenericArguments()[0];
+                    genericTypeArguments = serviceType.GetGenericArguments();
                 }
                 else if (genericTypeDefinition == CallSites.Lazy)
                 {
                     mi = InjectionMode.Lazy;
                     serviceType = serviceType.GetGenericArguments()[0];
+                    genericTypeArguments = serviceType.GetGenericArguments();
+                }
+                else //open generic type?
+                {
+                    mi = InjectionMode.Generic;
+                    serviceType = genericTypeDefinition;
+                    genericTypeArguments = serviceType.GetGenericArguments();
                 }
             }
             else if (serviceType.IsArray)
@@ -184,7 +209,8 @@ namespace Envelop
                 Resolver = req.Resolver, 
                 Target = targetType, 
                 InjectionMode = mi,
-                CurrentScope = req.CurrentScope
+                CurrentScope = req.CurrentScope,
+                GenericTypeArguments =  genericTypeArguments
             };
         }
 

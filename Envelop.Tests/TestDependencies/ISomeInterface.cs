@@ -122,6 +122,43 @@ namespace Envelop.Tests.TestDependencies
         }
     }
 
+    interface IGenericInterface<T>
+    {
+    }
+
+    class GenericInterface<T> : IGenericInterface<T>
+    {
+    }
+
+    interface IGenericInterface<T1,T2>
+    {
+    }
+
+    class GenericInterface<T1,T2> : IGenericInterface<T1,T2>
+    {
+    }
+
+
+    interface IGenericInterface2<T>
+    {
+        ISomeInterface Dependency { get; }
+    }
+
+    class GenericInterface2<T> : IGenericInterface2<T>
+    {
+        public ISomeInterface Dependency { get; }
+
+        public GenericInterface2(ISomeInterface dependency)
+        {
+            Dependency = dependency;
+        }
+
+    }
+
+    class GenericInterfaceWacky<T2, T1> : IGenericInterface<T1, T2>
+    {
+    }
+
     interface IIsDisposable : IDisposable 
     {
         bool IsDisposed { get; }

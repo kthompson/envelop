@@ -87,11 +87,16 @@ namespace Envelop
         /// <exception cref="BindingNotFoundException"></exception>
         public object Resolve(IRequest req)
         {
-            var binding = ResolveBindings(req).FirstOrDefault();
-            if (binding == null)
+            var resolutionList =
+                from binding in ResolveBindings(req)
+                let activation = binding.Activate(req)
+                select activation.Object;
+
+            var result = resolutionList.FirstOrDefault();
+            if (result == null)
                 throw new BindingNotFoundException(req);
 
-            return binding.Activate(req).Object;
+            return result;
         }
 
         #endregion

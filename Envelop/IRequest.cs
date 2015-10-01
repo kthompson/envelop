@@ -52,48 +52,13 @@ namespace Envelop
         /// </summary>
         /// <value>The current scope.</value>
         IScope CurrentScope { get; }
-    }
-
-    /// <summary>
-    /// An enum to indicate multi-injection if any
-    /// </summary>
-    public enum InjectionMode
-    {
-        /// <summary>
-        /// No multi-injection
-        /// </summary>
-        None,
-        /// <summary>
-        /// Array based multi-injection
-        /// </summary>
-        Array,
-        /// <summary>
-        /// Enumerable based multi-injection
-        /// </summary>
-        Enumerable,
-        /// <summary>
-        /// List based multi-injection
-        /// </summary>
-        List,
-        /// <summary>
-        /// Return a factory method
-        /// </summary>
-        Factory,
-
 
         /// <summary>
-        /// Return a Lazy&lt;T&gt;
+        /// Gets or sets the generic type arguments.
         /// </summary>
-        Lazy
-    }
-
-    class Request : IRequest
-    {
-        public IResolver Resolver { get; set; }
-        public Type ServiceType { get; set; }
-        public Type Target { get; set; }
-        public IRequest ParentRequest { get; set; }
-        public InjectionMode InjectionMode { get; set; }
-        public IScope CurrentScope { get; set; }
+        /// <value>
+        /// The generic type arguments.
+        /// </value>
+        Type[] GenericTypeArguments { get; set; }
     }
 }
