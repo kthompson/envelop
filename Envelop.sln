@@ -1,25 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Envelop", "Envelop\Envelop.csproj", "{BF0D10D5-D3E1-4309-AAC4-D13857131C10}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Envelop.Tests", "Envelop.Tests\Envelop.Tests.csproj", "{482BFD4B-7F92-4A41-A863-752AE33B6C56}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B84BAC17-D430-4070-8E92-9E293252542F}"
 	ProjectSection(SolutionItems) = preProject
 		build.bat = build.bat
-		Envelop\Envelop.nuspec = Envelop\Envelop.nuspec
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3F2D181C-EE8A-4232-A7E9-2E4B513D9742}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Envelop.Tests", "tests\Envelop.Tests\Envelop.Tests.csproj", "{0B6088E7-CF2D-4E4B-A537-CAB08D66CFE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Envelop", "src\Envelop\Envelop.csproj", "{9BD67B83-95F0-4836-9B9D-20924EBDB1D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,16 +19,19 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BF0D10D5-D3E1-4309-AAC4-D13857131C10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BF0D10D5-D3E1-4309-AAC4-D13857131C10}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BF0D10D5-D3E1-4309-AAC4-D13857131C10}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BF0D10D5-D3E1-4309-AAC4-D13857131C10}.Release|Any CPU.Build.0 = Release|Any CPU
-		{482BFD4B-7F92-4A41-A863-752AE33B6C56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{482BFD4B-7F92-4A41-A863-752AE33B6C56}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{482BFD4B-7F92-4A41-A863-752AE33B6C56}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{482BFD4B-7F92-4A41-A863-752AE33B6C56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B6088E7-CF2D-4E4B-A537-CAB08D66CFE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B6088E7-CF2D-4E4B-A537-CAB08D66CFE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B6088E7-CF2D-4E4B-A537-CAB08D66CFE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B6088E7-CF2D-4E4B-A537-CAB08D66CFE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BD67B83-95F0-4836-9B9D-20924EBDB1D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BD67B83-95F0-4836-9B9D-20924EBDB1D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BD67B83-95F0-4836-9B9D-20924EBDB1D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BD67B83-95F0-4836-9B9D-20924EBDB1D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D1D93663-1AC6-4905-AD05-786A22E3BDA5}
 	EndGlobalSection
 EndGlobal

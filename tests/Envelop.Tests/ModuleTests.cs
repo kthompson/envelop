@@ -56,7 +56,7 @@ namespace Envelop.Tests
 
             Assert.NotNull(t1);
             Assert.NotNull(t1.SomeInterfaces);
-            Assert.Equal(1, t1.SomeInterfaces.Length);
+            Assert.Single(t1.SomeInterfaces);
             Assert.True(t1.SomeInterfaces[0] is SomeInterfaceImplementation);
         }
 

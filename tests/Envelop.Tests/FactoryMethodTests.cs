@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Envelop.Tests.TestDependencies;
+﻿using Envelop.Tests.TestDependencies;
 using Xunit;
 
 namespace Envelop.Tests
@@ -22,7 +17,7 @@ namespace Envelop.Tests
 
             Assert.NotNull(t1);
 
-            Assert.Equal(t1.Value1, 25);
+            Assert.Equal(25, t1.Value1);
         }
 
         [Fact]
@@ -42,8 +37,8 @@ namespace Envelop.Tests
 
             Assert.NotNull(t1);
 
-            Assert.Equal(t1.Value1, 25);
-            Assert.Equal(t1.Value2, 21);
+            Assert.Equal(25, t1.Value1);
+            Assert.Equal(21, t1.Value2);
         }
 
         [Fact]
@@ -65,9 +60,9 @@ namespace Envelop.Tests
 
             Assert.NotNull(t1);
 
-            Assert.Equal(t1.Value1, 25);
-            Assert.Equal(t1.Value2, 21);
-            Assert.Equal(t1.Value3, 21.5f);
+            Assert.Equal(25, t1.Value1);
+            Assert.Equal(21, t1.Value2);
+            Assert.Equal(21.5f, t1.Value3);
         }
 
         [Fact]
@@ -76,7 +71,7 @@ namespace Envelop.Tests
             //Given
             var kernel = Kernel.Create();
             var x = 0;
-            kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>(_ => new SomeInterfaceImplementation(x++));
+            kernel.Bind<ISomeInterface>().To(_ => new SomeInterfaceImplementation(x++));
             kernel.Bind<SomeInterfaceFactory>().To<SomeInterfaceFactory>();
 
             
@@ -105,7 +100,7 @@ namespace Envelop.Tests
             //Given
             var kernel = Kernel.Create();
             var x = 0;
-            kernel.Bind<ISomeInterface>().To<SomeInterfaceImplementation>(_ => new SomeInterfaceImplementation(x++));
+            kernel.Bind<ISomeInterface>().To(_ => new SomeInterfaceImplementation(x++));
             kernel.Bind<SomeInterfaceLazy>().To<SomeInterfaceLazy>();
 
 

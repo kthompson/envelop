@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net452;net462</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <VersionPrefix>0.2.0</VersionPrefix>
+
+    <Description>Envelop is a simple to use Dependency Injection and Inversion of Control container</Description>
+    <PackageId>Envelop</PackageId>
+    <PackageTags>ioc;dependency injection; fluent;simple;c#</PackageTags>
+    <PackageReleaseNotes>Add .NET Core support</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/kthompson/envelop</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/kthompson/envelop/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/kthompson/envelop.git</RepositoryUrl>
+  </PropertyGroup>
+</Project>

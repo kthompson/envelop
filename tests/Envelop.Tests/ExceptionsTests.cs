@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Envelop.Tests
 {
-    class ExceptionsTests
+    public class ExceptionsTests
     {
         [Fact]
         public void IncompleteBindingException()

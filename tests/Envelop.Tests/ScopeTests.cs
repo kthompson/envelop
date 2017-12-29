@@ -57,21 +57,19 @@ namespace Envelop.Tests
         {
             var disposed = 0;
             var kernel = Kernel.Create ();
-            ISomeInterface rootObject;
-            ISomeInterface scopedObject;
 
             using (kernel) 
             {
                 kernel.Bind<ISomeInterface> ().To<SomeInterfaceImplementation> ().AfterDeactivation(_ => disposed++);
 
-                rootObject = kernel.Resolve<ISomeInterface> ();
+                var rootObject = kernel.Resolve<ISomeInterface> ();
 
                 Assert.NotNull (rootObject);
                 Assert.Equal (0, disposed);
 
                 using (var scope = kernel.CreateScope ()) 
                 {
-                    scopedObject = scope.Resolve<ISomeInterface> ();
+                    var scopedObject = scope.Resolve<ISomeInterface> ();
 
                     Assert.NotNull (scopedObject);
                     Assert.Equal (0, disposed);

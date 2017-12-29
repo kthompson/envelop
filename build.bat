@@ -1,1 +1,1 @@
-@.\.nuget\NuGet.exe pack .\Envelop\Envelop.csproj
+@dotnet pack -c Release .\src\Envelop\Envelop.csproj
